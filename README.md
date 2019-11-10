@@ -1,5 +1,5 @@
 ## CODEJAM PALETTE
-    You need to open dir ***palette*** and:
+    You need to open dir palette and:
  - `npm install` or `npm i` to install all necessary files;
  - `npm run lint` to check script.js on mistakes (used eslint) (you will see the an empty line, because all mistakes was fixed);
  - `npm test` to run jest tests. In this task it was necessary to write one check.
