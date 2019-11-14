@@ -9,7 +9,7 @@ window.onload = function() {
   let currentCanvas = localStorage.getItem("currentCanvas");
   const canvas = document.getElementById('canvas');
   const context = canvas.getContext("2d");
-  const scale = 128;
+  let scale = 4;
   const colorsArray = [
     ["00BCD4", "FFEB3B","FFEB3B","00BCD4"],
     ["FFEB3B", "FFC107","FFC107","FFEB3B"],
@@ -79,6 +79,10 @@ window.onload = function() {
   function floodFill(canvas, x, y, replacementColor, delta) {
       let current, w, e, stack, color, cx, cy;
       let context = canvas.getContext("2d");
+      let pixels = context.getImageData(x, y, 1, 1).data;
+      if ('0x' + rgbToHex(pixels[0], pixels[1], pixels[2]).substr(1) + 'FF' === currentColor) {
+        return;
+      }
       let pixelData = context.getImageData(0, 0, canvas.width, canvas.height);
       let done = [];
       for (let i = 0; i < canvas.width; i++) {
@@ -127,7 +131,6 @@ window.onload = function() {
           }
       }
       context.putImageData(pixelData, 0, 0, 0, 0, canvas.width, canvas.height);
-      console.log(pixelData);
   }
   const red = '0xFF0000FF';
   const blue = '0x0000FFFF';
@@ -227,6 +230,20 @@ window.onload = function() {
       document.querySelector('.selected-tool').classList.remove('selected-tool');
       chooseColor.classList.add('selected-tool');
     }
+  });
+    $(function() {
+    $("#slider-range-pencil" ).slider({
+      range: "min",
+      value: 128,
+      min: 128,
+      max: 512,
+      step: 128,
+      slide: function( event, ui ) {
+        $("#pencil-size").val(512 / ui.value);
+        scale = 512 / ui.value;
+      }
+    });
+    $("#pencil-size").val(512 / $("#slider-range-pencil").slider("value"));
   });
   window.addEventListener('beforeunload', () => {
     localStorage.setItem('currentCanvas', canvas.toDataURL());

@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Canvas</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css">
     <link rel="stylesheet" href="style.css">
@@ -30,7 +31,7 @@
 
         <ul id="color-list">
           <label for="select_color"><li><input id="select_color" type="color" value="#FF0000"><p>Select color</p></li></label>
-          <div class="border"></div>  
+          <div class="border"></div>
           <li id="current_color">
           <div class="current-color color"></div><p>Current color</p>
           </li>
@@ -47,14 +48,37 @@
         </ul>
       </div>
 
+      <div class="canvas-block">
 
-      <canvas id="canvas" width="512" height="512">
+        <div class="canvas-buttons-container">
+          <div class="search-and-load">
+            <div id="load-btn" class="canvas-btn">
+              <p>Load</p>
+            </div>
+            <div id="search">
+              <input id="search-input" type="text" class="search-field" placeholder="Minsk">
+              <img src=".\assets\loupe.png" alt="" class="search-icon" width="11.66" height="11.66">
+            </div>
+          </div>
+          <div id="black-and-white-btn" class="canvas-btn">
+            <p>B&W</p>
+          </div>
+        </div>
+        <canvas id="canvas" width="512" height="512"></canvas>
+        <p>
+          <label for="pencil-size">Pencil size:</label>
+          <input type="text" id="pencil-size" readonly>
+        </p>
+        <div id="slider-range-pencil"></div>
+      </div>
 
-      </canvas>
+
+
 
     </main>
 
-
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript" src="script.js"></script>
   </body>
 </html>
