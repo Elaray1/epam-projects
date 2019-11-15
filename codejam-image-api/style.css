@@ -109,6 +109,9 @@ input[type=color]::-moz-color-swatch {
   color: white;
   cursor: pointer;
 }
+.canvas-btn:active {
+  background-color: #bb6c8a;
+}
 #search {
   display: inline-flex;
   background: #FAFAFA;

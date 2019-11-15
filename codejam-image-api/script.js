@@ -231,6 +231,7 @@ window.onload = function() {
       chooseColor.classList.add('selected-tool');
     }
   });
+  const maxSize = 512;
     $(function() {
     $("#slider-range-pencil" ).slider({
       range: "min",
@@ -239,12 +240,42 @@ window.onload = function() {
       max: 512,
       step: 128,
       slide: function( event, ui ) {
-        $("#pencil-size").val(512 / ui.value);
-        scale = 512 / ui.value;
+        $("#pencil-size").val((maxSize / ui.value).toFixed(1));
+        scale = maxSize / ui.value;
       }
     });
-    $("#pencil-size").val(512 / $("#slider-range-pencil").slider("value"));
+    $("#pencil-size").val((maxSize / $("#slider-range-pencil").slider("value")).toFixed(1));
   });
+  const accessKey = '25381e62920ef461a24a62f409b796e25771b9d5c296277ab8be4fd03ee11d3b';
+  async function getLinkToImage(keyword) {
+  const url = `https://api.unsplash.com/photos/random?query=town,${keyword}&client_id=${accessKey}`;
+  let data = await fetch(url).then(res => res.json());
+  let img = new Image();
+  img.onload = function() {
+  const width = this.width;
+  const height = this.height;
+  if (width >= height) {
+    this.width = maxSize;
+    this.height = height * maxSize / width;
+  } else {
+    this.height = maxSize;
+    this.width = width * maxSize / height;
+  }
+  context.fillStyle = "rgb(192, 192, 192)";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  width >= height ? context.drawImage(img, 0, (canvas.height - this.height) / 2, this.width, this.height) : context.drawImage(img, (canvas.width - this.width) / 2, 0, this.width, this.height);
+  }
+  img.src = data.urls.small;
+  img.crossOrigin = "Anonymous";
+  }
+
+  const loadButton = document.getElementById('load-btn');
+  loadButton.addEventListener('click', () => {
+    const keyWord = document.getElementById('search-input').value;
+    getLinkToImage(keyWord);
+  });
+
+
   window.addEventListener('beforeunload', () => {
     localStorage.setItem('currentCanvas', canvas.toDataURL());
   });
