@@ -5,7 +5,9 @@
   "main": "script.js",
   "scripts": {
     "test": "jest",
-    "lint": "eslint script.js"
+    "lint": "eslint script.js",
+    "build": "webpack",
+    "start": "webpack --watch"
   },
   "repository": {
     "type": "git",
