@@ -19,6 +19,14 @@
       <img src="assets\Shape.png" width="4" height="16">
     </header>
 
+    <div class="github-auth-block">
+      <h2>GitHub Auth:</h2>
+      <p><a href="#" id="login">Authenticate</a></p>
+      <p id="output"></p>
+    </div>
+
+
+
     <main>
       <div class="tools">
         <ul id="tools-list">
@@ -62,12 +70,13 @@
         </div>
         <canvas id="canvas" width="512" height="512"></canvas>
         <p>
-          <label for="pencil-size">Pencil size:</label>
+          <label for="pencil-size">Canvas size:</label>
           <input type="text" id="pencil-size" readonly>
         </p>
         <div id="slider-range-pencil"></div>
       </div>
     </main>
+    <script src="https://unpkg.com/netlify-auth-providers"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript" src="dist/bundle.js"></script>

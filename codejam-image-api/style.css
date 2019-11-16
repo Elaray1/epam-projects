@@ -96,6 +96,9 @@ input[type=color]::-moz-color-swatch {
 }
 #canvas {
   margin: 9px 0;
+  width: 512px;
+  height: 512px;
+  image-rendering: pixelated;
 }
 .canvas-btn {
   display: flex;
@@ -144,4 +147,12 @@ input[type=color]::-moz-color-swatch {
   border:0;
   color:#f6931f;
   font-weight:bold;
+}
+.github-auth-block {
+  width: 300px;
+  margin: 0 auto;
+}
+.github-auth-block h2 {
+  font-size: 20px;
+  margin: 20px 0;
 }

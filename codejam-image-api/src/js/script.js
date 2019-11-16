@@ -9,7 +9,7 @@ window.onload = function() {
   let currentCanvas = localStorage.getItem("currentCanvas");
   const canvas = document.getElementById('canvas');
   const context = canvas.getContext("2d");
-  let scale = 4;
+  let scale = 1;
   const colorsArray = [
     ["00BCD4", "FFEB3B","FFEB3B","00BCD4"],
     ["FFEB3B", "FFC107","FFC107","FFEB3B"],
@@ -31,7 +31,7 @@ window.onload = function() {
     let img = new Image;
     img.src = dataURL;
     img.onload = function () {
-        context.drawImage(img, 0, 0);
+        context.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
     };
   }
   const pencil = document.getElementById('pencil');
@@ -179,10 +179,10 @@ window.onload = function() {
   }
   function drow(x, y, color) {
     if (!isDrawing) return;
-    x = Math.floor(x / scale) * scale;
-    y = Math.floor(y / scale) * scale;
-    let pixelData = context.getImageData(x, y, scale, scale);
-    for (let i = 0; i < scale * 4 * scale; i += 4) {
+    x = Math.floor(x * canvas.width / maxSize);
+    y = Math.floor(y * canvas.width / maxSize);
+    let pixelData = context.getImageData(x, y, 1, 1);
+    for (let i = 0; i < 1 * 4 * 1; i += 4) {
       pixelData.data[i] = (color >>> 24) & 0xFF;
       pixelData.data[i + 1] = (color >>> 16) & 0xFF;
       pixelData.data[i + 2] = (color >>>  8) & 0xFF;
@@ -217,56 +217,63 @@ window.onload = function() {
     }
   })
   document.addEventListener('keydown', function(event) {
-    if (event.keyCode == 66) {
+    if (event.keyCode == 66) { // key b
       currentTool = 'paint_bucket';
       document.querySelector('.selected-tool').classList.remove('selected-tool');
       paintBucket.classList.add('selected-tool');
-    } else if (event.keyCode == 80) {
+    } else if (event.keyCode == 80) { //key p
       currentTool = 'pencil';
       document.querySelector('.selected-tool').classList.remove('selected-tool');
       pencil.classList.add('selected-tool');
-    } else if (event.keyCode == 67) {
+    } else if (event.keyCode == 67) { //key c
       currentTool = 'choose_color';
       document.querySelector('.selected-tool').classList.remove('selected-tool');
       chooseColor.classList.add('selected-tool');
     }
   });
   const maxSize = 512;
+  function setCanvasSize(size) {
+    let img = new Image();
+    img.onload = () => {
+      canvas.width = size;
+      canvas.height = size;
+      scale = 512 / size;
+      context.drawImage(img, 0, 0, img.width, img.height, 0, 0, size, size);
+    }
+    img.src = canvas.toDataURL();
+  }
     $(function() {
     $("#slider-range-pencil" ).slider({
       range: "min",
-      value: 128,
+      value: 512,
       min: 128,
       max: 512,
       step: 128,
       slide: function( event, ui ) {
-        $("#pencil-size").val((maxSize / ui.value).toFixed(1));
-        scale = maxSize / ui.value;
+        $("#pencil-size").val(ui.value);
+        setCanvasSize(ui.value);
       }
     });
-    $("#pencil-size").val((maxSize / $("#slider-range-pencil").slider("value")).toFixed(1));
+    $("#pencil-size").val($("#slider-range-pencil").slider("value"));
   });
-  const accessKey = 'ef8e0674f82bf16c9a2d6833fd2e0dbb57b72480187835b3b76daf3342640bfd';
-  async function getLinkToImage(keyword) {
-  const url = `https://api.unsplash.com/photos/random?query=town,${keyword}&client_id=${accessKey}`;
-  let data = await fetch(url).then(res => res.json());
-  let img = new Image();
-  img.onload = function() {
-  const width = this.width;
-  const height = this.height;
-  if (width >= height) {
-    this.width = maxSize;
-    this.height = height * maxSize / width;
-  } else {
-    this.height = maxSize;
-    this.width = width * maxSize / height;
-  }
-  context.fillStyle = "rgb(192, 192, 192)";
-  context.fillRect(0, 0, canvas.width, canvas.height);
-  width >= height ? context.drawImage(img, 0, (canvas.height - this.height) / 2, this.width, this.height) : context.drawImage(img, (canvas.width - this.width) / 2, 0, this.width, this.height);
-  }
-  img.src = data.urls.small;
-  img.crossOrigin = "Anonymous";
+  const accessKey = 'c29222b3f06bea411227ea9ea7b7878aed59e164737b3c4408060aca8a1c585f';
+  async function getLinkToImage(city) {
+    const url = `https://api.unsplash.com/photos/random?query=town,${city}&client_id=${accessKey}`;
+    const data = await fetch(url).then(res => res.json());
+    let img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.src = data.urls.small;
+    img.onload = function () {
+      const wRatio = canvas.width / img.width;
+      const hRatio = canvas.height / img.height;
+      const ratio = Math.min(wRatio, hRatio);
+      const center_x = (canvas.width - img.width * ratio) / 2;
+      const center_y = (canvas.height - img.height * ratio) / 2;
+      context.fillStyle = "rgb(192, 192, 192)";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(img, 0, 0, img.width, img.height,
+        center_x, center_y, img.width * ratio, img.height * ratio);
+    }
   }
   const grayscale = () => {
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
