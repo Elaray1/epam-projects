@@ -2,7 +2,7 @@ function componentToHex(c) {
   let hex = c.toString(16);
   return hex.length == 1 ? "0" + hex : hex;
 }
-function rgbToHex(r, g, b) {
+function rgbToHex(r, g, b) { //transform RGB format in HEX
   return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 window.onload = function() {
@@ -16,7 +16,7 @@ window.onload = function() {
     ["FFEB3B", "FFC107","FFC107","FFEB3B"],
     ["00BCD4", "FFEB3B","FFEB3B","00BCD4"]
   ];
-  function drawDefaultCanvas() {
+  function drawDefaultCanvas() { //drawing default canvas
     for (let row = 0; row < colorsArray.length; row++) {
       for (let col = 0; col < colorsArray[0].length; col++) {
         context.fillStyle = '#' + colorsArray[row][col];
@@ -25,6 +25,7 @@ window.onload = function() {
     }
   }
   if (currentCanvas == null) {
+    scale = 128;
     drawDefaultCanvas();
   } else {
     let dataURL = currentCanvas;
@@ -47,7 +48,7 @@ window.onload = function() {
       currentTool = el.getAttribute('id');
     })
   });
-  function getPixel(pixelData, x, y) {
+  function getPixel(pixelData, x, y) { //secondary function for filling that takes pixel info
       if (x < 0 || y < 0 || x >= pixelData.width || y >= pixelData.height) {
           return NaN;
       }
@@ -58,7 +59,7 @@ window.onload = function() {
              ((pixels[i + 2] & 0xFF) <<  8) |
              ((pixels[i + 3] & 0xFF) <<  0);
   }
-  function setPixel(pixelData, x, y, color) {
+  function setPixel(pixelData, x, y, color) { //secondary function for filling that transform pixels
       let i = (y * pixelData.width + x) * 4;
       let pixels = pixelData.data;
       pixels[i + 0] = (color >>> 24) & 0xFF;
@@ -76,7 +77,9 @@ window.onload = function() {
       let da = ((c1 >>>  0) & 0xFF) - ((c2 >>>  0) & 0xFF);
       return dr*dr + dg*dg + db*db + da*da;
   }
-  function floodFill(canvas, x, y, replacementColor, delta) {
+  function floodFill(canvas, x, y, replacementColor, delta) { //fill function
+      x = Math.floor(x * canvas.width / maxSize);
+      y = Math.floor(y * canvas.width / maxSize);
       let current, w, e, stack, color, cx, cy;
       let context = canvas.getContext("2d");
       let pixels = context.getImageData(x, y, 1, 1).data;
@@ -169,19 +172,21 @@ window.onload = function() {
     document.querySelector('.prev-color').style.background = document.querySelector('.current-color').style.background;
     document.querySelector('.current-color').style.background = t;
   });
-  function selectColor(x, y) {
-    let pixelData = context.getImageData(x, y, 1, 1);
-    let pixels = pixelData.data;
+  function selectColor(x, y) { //fucntion for color picker tool that select the color
+    x = Math.floor(x * canvas.width / maxSize);
+    y = Math.floor(y * canvas.width / maxSize);
+    const pixelData = context.getImageData(x, y, 1, 1);
+    const pixels = pixelData.data;
     prevColor = currentColor;
     currentColor = '0x' + rgbToHex(pixels[0], pixels[1], pixels[2]).substr(1) + 'FF';
     document.querySelector('.prev-color').style.background = document.querySelector('.current-color').style.background;
     document.querySelector('.current-color').style.background = rgbToHex(pixels[0], pixels[1], pixels[2]);
   }
-  function drow(x, y, color) {
+  function drow(x, y, color) { //function for pencil tool that drows on canvas
     if (!isDrawing) return;
     x = Math.floor(x * canvas.width / maxSize);
     y = Math.floor(y * canvas.width / maxSize);
-    let pixelData = context.getImageData(x, y, 1, 1);
+    const pixelData = context.getImageData(x, y, 1, 1);
     for (let i = 0; i < 1 * 4 * 1; i += 4) {
       pixelData.data[i] = (color >>> 24) & 0xFF;
       pixelData.data[i + 1] = (color >>> 16) & 0xFF;
@@ -233,7 +238,7 @@ window.onload = function() {
   });
   const maxSize = 512;
   function setCanvasSize(size) {
-    let img = new Image();
+    const img = new Image();
     img.onload = () => {
       canvas.width = size;
       canvas.height = size;
@@ -242,7 +247,7 @@ window.onload = function() {
     }
     img.src = canvas.toDataURL();
   }
-    $(function() {
+    $(function() { //canvas size slider
     $("#slider-range-pencil" ).slider({
       range: "min",
       value: 512,
@@ -257,7 +262,7 @@ window.onload = function() {
     $("#pencil-size").val($("#slider-range-pencil").slider("value"));
   });
   const accessKey = 'c29222b3f06bea411227ea9ea7b7878aed59e164737b3c4408060aca8a1c585f';
-  async function getLinkToImage(city) {
+  async function getLinkToImage(city) { //function that creates random image on canvas
     const url = `https://api.unsplash.com/photos/random?query=town,${city}&client_id=${accessKey}`;
     const data = await fetch(url).then(res => res.json());
     let img = new Image();
@@ -275,11 +280,11 @@ window.onload = function() {
         center_x, center_y, img.width * ratio, img.height * ratio);
     }
   }
-  const grayscale = () => {
+  const grayscale = () => { // gray filter
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
     const data = imageData.data;
     for (let i = 0; i < data.length; i += 4) {
-      let avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+      const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
       data[i]     = avg; // red
       data[i + 1] = avg; // green
       data[i + 2] = avg; // blue
