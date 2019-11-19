@@ -22,6 +22,13 @@ window.onload = () => {
   const redColor = document.getElementById('red_color');
   const blueColor = document.getElementById('blue_color');
   const previousColor = document.getElementById('prev_color');
+  function addOrRemoveClassName(action, className, querySelector) {
+    if (action === 'remove') {
+      document.querySelector(querySelector).classList.remove(className);
+    } else if (action === 'add') {
+      document.querySelector(querySelector).classList.add(className);
+    }
+  }
   function initialCanvas() {
     for (let row = 0; row < colorsArray.length; row++) {
       for (let col = 0; col < colorsArray[0].length; col++) {
@@ -165,66 +172,66 @@ window.onload = () => {
     document.querySelector('.prev-color').style.background = document.querySelector('.current-color').style.background;
     document.querySelector('.current-color').style.background = t;
   });
-  function selectColor(x, y) {
-    const pixelData = context.getImageData(x, y, 1, 1);
+  function selectColor(xAxis, yAxis) {
+    const pixelData = context.getImageData(xAxis, yAxis, 1, 1);
     const pixels = pixelData.data;
     prevColor = currentColor;
     currentColor = '0x' + convertRgbToHex(pixels[0], pixels[1], pixels[2]).substr(1) + 'FF';
     document.querySelector('.prev-color').style.background = document.querySelector('.current-color').style.background;
     document.querySelector('.current-color').style.background = convertRgbToHex(pixels[0], pixels[1], pixels[2]);
   }
-  function drow(x, y, color) {
+  function pencilDraw(coordinateX, coordinateY, currentColor) {
     if (!isDrawing) return;
-    x = Math.floor(x / scale) * scale;
-    y = Math.floor(y / scale) * scale;
-    const pixelData = context.getImageData(x, y, scale, scale);
+    const xAxis = Math.floor(coordinateX / scale) * scale;
+    const yAxis = Math.floor(coordinateY / scale) * scale;
+    const pixelData = context.getImageData(xAxis, yAxis, scale, scale);
     for (let i = 0; i < scale * 4 * scale; i += 4) {
-      pixelData.data[i] = (color >>> 24) & 0xFF;
-      pixelData.data[i + 1] = (color >>> 16) & 0xFF;
-      pixelData.data[i + 2] = (color >>>  8) & 0xFF;
-      pixelData.data[i+ 3] = (color >>>  0) & 0xFF;
+      pixelData.data[i] = (currentColor >>> 24) & 0xFF;
+      pixelData.data[i + 1] = (currentColor >>> 16) & 0xFF;
+      pixelData.data[i + 2] = (currentColor >>>  8) & 0xFF;
+      pixelData.data[i+ 3] = (currentColor >>>  0) & 0xFF;
     }
-    context.putImageData(pixelData, x, y);
+    context.putImageData(pixelData, xAxis, yAxis);
   }
   let isDrawing = false;
   canvas.addEventListener('mousemove', (e) => {
     if (currentTool != 'pencil' || currentTool != pencil) {
-      [x, y] = [e.offsetX, e.offsetY];
-      drow(x, y, currentColor);
+      [xCoordinate, yCoordinate] = [e.offsetX, e.offsetY];
+      pencilDraw(xCoordinate, yCoordinate, currentColor);
     }
   });
   canvas.addEventListener('mousedown', (e) => {
     if (currentTool === 'pencil' || currentTool === pencil) {
       isDrawing = true;
-      [x, y] = [e.offsetX, e.offsetY];
-      drow(x, y, currentColor);
+      [xCoordinate, yCoordinate] = [e.offsetX, e.offsetY];
+      pencilDraw(xCoordinate, yCoordinate, currentColor);
     }
   });
   canvas.addEventListener('mouseup', () => isDrawing = false);
   canvas.addEventListener('mouseout', () => isDrawing = false);
-  let x = 0, y = 0;
+  let xCoordinate = 0, yCoordinate = 0;
   canvas.addEventListener('click', (event) => {
-    x = event.layerX;
-    y = event.layerY;
+    xCoordinate = event.layerX;
+    yCoordinate = event.layerY;
     if (currentTool === 'paint_bucket') {
-      floodFill(canvas, x, y, currentColor, 1);
+      floodFill(canvas, xCoordinate, yCoordinate, currentColor, 1);
     } else if (currentTool === 'choose_color') {
-      selectColor(x, y);
+      selectColor(xCoordinate, yCoordinate);
     }
   })
   document.addEventListener('keydown', function(event) {
-    if (event.keyCode === 66) { //key b
+    if (event.keyCode === 66) { //keyCode of b
       currentTool = 'paint_bucket';
-      document.querySelector('.selected-tool').classList.remove('selected-tool');
-      paintBucket.classList.add('selected-tool');
-    } else if (event.keyCode === 80) { //key p
+      addOrRemoveClassName('remove', 'selected-tool', '.selected-tool');
+      addOrRemoveClassName('add', 'selected-tool', '#paint_bucket');
+    } else if (event.keyCode === 80) { //keyCode of p
       currentTool = 'pencil';
-      document.querySelector('.selected-tool').classList.remove('selected-tool');
-      pencil.classList.add('selected-tool');
-    } else if (event.keyCode === 67) { //key c
+      addOrRemoveClassName('remove', 'selected-tool', '.selected-tool');
+      addOrRemoveClassName('add', 'selected-tool', '#pencil');
+    } else if (event.keyCode === 67) { //keyCode of c
       currentTool = 'choose_color';
-      document.querySelector('.selected-tool').classList.remove('selected-tool');
-      chooseColor.classList.add('selected-tool');
+      addOrRemoveClassName('remove', 'selected-tool', '.selected-tool');
+      addOrRemoveClassName('add', 'selected-tool', '#choose_color');
     }
   });
   window.addEventListener('beforeunload', () => {
