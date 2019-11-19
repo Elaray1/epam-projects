@@ -16,7 +16,7 @@ window.onload = () => {
   const canvas = document.getElementById('canvas');
   const context = canvas.getContext("2d");
   const scale = 128;
-  function drawDefaultCanvas() {
+  function initialCanvas() {
     for (let row = 0; row < colorsArray.length; row++) {
       for (let col = 0; col < colorsArray[0].length; col++) {
         context.fillStyle = '#' + colorsArray[row][col];
@@ -25,7 +25,7 @@ window.onload = () => {
     }
   }
   if (currentCanvas === null) {
-    drawDefaultCanvas();
+    initialCanvas();
   } else {
     const dataURL = currentCanvas;
     const img = new Image;
@@ -77,7 +77,7 @@ window.onload = () => {
       return dr*dr + dg*dg + db*db + da*da;
   }
   function floodFill(canvas, x, y, replacementColor, delta) {
-      let current, w, e, stack, color, cx, cy;
+      let current, coordinateX1, coordinateX2, stack, color, currentX, currentY;
       const context = canvas.getContext("2d");
       const pixelData = context.getImageData(0, 0, canvas.width, canvas.height);
       const done = [];
@@ -89,37 +89,37 @@ window.onload = () => {
       stack = [ [x, y] ];
       done[x][y] = true;
       while ((current = stack.pop())) {
-          cx = current[0];
-          cy = current[1];
-          if (diff(getPixel(pixelData, cx, cy), targetColor) <= delta) {
-              setPixel(pixelData, cx, cy, replacementColor);
-              w = e = cx;
-              while (w > 0 && diff(getPixel(pixelData, w - 1, cy), targetColor) <= delta) {
-                  --w;
-                  if (done[w][cy]) break;
-                  setPixel(pixelData, w, cy, replacementColor);
+          currentX = current[0];
+          currentY = current[1];
+          if (diff(getPixel(pixelData, currentX, currentY), targetColor) <= delta) {
+              setPixel(pixelData, currentX, currentY, replacementColor);
+              coordinateX1 = coordinateX2 = currentX;
+              while (coordinateX1 > 0 && diff(getPixel(pixelData, coordinateX1 - 1, currentY), targetColor) <= delta) {
+                  --coordinateX1;
+                  if (done[coordinateX1][currentY]) break;
+                  setPixel(pixelData, coordinateX1, currentY, replacementColor);
               }
-              while (e < pixelData.width - 1 && diff(getPixel(pixelData, e + 1, cy), targetColor) <= delta) {
-                  ++e;
-                  if (done[e][cy]) break;
-                  setPixel(pixelData, e, cy, replacementColor);
+              while (coordinateX2 < pixelData.width - 1 && diff(getPixel(pixelData, coordinateX2 + 1, currentY), targetColor) <= delta) {
+                  ++coordinateX2;
+                  if (done[coordinateX2][currentY]) break;
+                  setPixel(pixelData, coordinateX2, currentY, replacementColor);
               }
-              for (cx = w; cx <= e; cx++) {
-                  if (cy > 0) {
-                      color = getPixel(pixelData, cx, cy - 1);
+              for (currentX = coordinateX1; currentX <= coordinateX2; currentX++) { // currentX can be = w = e if prev two conditions are not met, so this `for` won't work
+                  if (currentY > 0) {
+                      color = getPixel(pixelData, currentX, currentY - 1);
                       if (diff(color, targetColor) <= delta) {
-                          if (!done[cx][cy - 1]) {
-                              stack.push([cx, cy - 1]);
-                              done[cx][cy - 1] = true;
+                          if (!done[currentX][currentY - 1]) {
+                              stack.push([currentX, currentY - 1]);
+                              done[currentX][currentY - 1] = true;
                           }
                       }
                   }
-                  if (cy < canvas.height - 1) {
-                      color = getPixel(pixelData, cx, cy + 1);
+                  if (currentY < canvas.height - 1) {
+                      color = getPixel(pixelData, currentX, currentY + 1);
                       if (diff(color, targetColor) <= delta) {
-                          if (!done[cx][cy + 1]) {
-                              stack.push([cx, cy + 1]);
-                              done[cx][cy + 1] = true;
+                          if (!done[currentX][currentY + 1]) {
+                              stack.push([currentX, currentY + 1]);
+                              done[currentX][currentY + 1] = true;
                           }
                       }
                   }
