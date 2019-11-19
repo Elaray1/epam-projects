@@ -2,20 +2,20 @@ function convertComponentToHex(c) {
   const hex = c.toString(16);
   return hex.length === 1 ? "0" + hex : hex;
 }
-function rgbToHex(r, g, b) {
-  return "#" + convertComponentToHex(r) + convertComponentToHex(g) + convertComponentToHex(b);
+function convertRgbToHex(red, green, blue) {
+  return "#" + convertComponentToHex(red) + convertComponentToHex(green) + convertComponentToHex(blue);
 }
-window.onload = function() {
+const colorsArray = [
+  ["00BCD4", "FFEB3B","FFEB3B","00BCD4"],
+  ["FFEB3B", "FFC107","FFC107","FFEB3B"],
+  ["FFEB3B", "FFC107","FFC107","FFEB3B"],
+  ["00BCD4", "FFEB3B","FFEB3B","00BCD4"]
+];
+window.onload = () => {
   const currentCanvas = localStorage.getItem("currentCanvas");
   const canvas = document.getElementById('canvas');
   const context = canvas.getContext("2d");
   const scale = 128;
-  const colorsArray = [
-    ["00BCD4", "FFEB3B","FFEB3B","00BCD4"],
-    ["FFEB3B", "FFC107","FFC107","FFEB3B"],
-    ["FFEB3B", "FFC107","FFC107","FFEB3B"],
-    ["00BCD4", "FFEB3B","FFEB3B","00BCD4"]
-  ];
   function drawDefaultCanvas() {
     for (let row = 0; row < colorsArray.length; row++) {
       for (let col = 0; col < colorsArray[0].length; col++) {
@@ -169,9 +169,9 @@ window.onload = function() {
     const pixelData = context.getImageData(x, y, 1, 1);
     const pixels = pixelData.data;
     prevColor = currentColor;
-    currentColor = '0x' + rgbToHex(pixels[0], pixels[1], pixels[2]).substr(1) + 'FF';
+    currentColor = '0x' + convertRgbToHex(pixels[0], pixels[1], pixels[2]).substr(1) + 'FF';
     document.querySelector('.prev-color').style.background = document.querySelector('.current-color').style.background;
-    document.querySelector('.current-color').style.background = rgbToHex(pixels[0], pixels[1], pixels[2]);
+    document.querySelector('.current-color').style.background = convertRgbToHex(pixels[0], pixels[1], pixels[2]);
   }
   function drow(x, y, color) {
     if (!isDrawing) return;
@@ -231,4 +231,4 @@ window.onload = function() {
     localStorage.setItem('currentCanvas', canvas.toDataURL());
   });
 }
-module.exports = rgbToHex;
+module.exports = convertRgbToHex;

@@ -1,5 +1,5 @@
-const rgbToHex = require('./script');
+const convertRgbToHex = require('./script');
 
 test('transform RGB format in HEX format', () => {
-  expect(rgbToHex(255, 255, 255)).toBe('#ffffff');
+  expect(convertRgbToHex(255, 255, 255)).toBe('#ffffff');
 })
