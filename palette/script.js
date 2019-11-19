@@ -1,12 +1,12 @@
-function componentToHex(c) {
-  let hex = c.toString(16);
+function convertComponentToHex(c) {
+  const hex = c.toString(16);
   return hex.length == 1 ? "0" + hex : hex;
 }
 function rgbToHex(r, g, b) {
-  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+  return "#" + convertComponentToHex(r) + convertComponentToHex(g) + convertComponentToHex(b);
 }
 window.onload = function() {
-  let currentCanvas = localStorage.getItem("currentCanvas");
+  const currentCanvas = localStorage.getItem("currentCanvas");
   const canvas = document.getElementById('canvas');
   const context = canvas.getContext("2d");
   const scale = 128;
@@ -27,8 +27,8 @@ window.onload = function() {
   if (currentCanvas == null) {
     drawDefaultCanvas();
   } else {
-    let dataURL = currentCanvas;
-    let img = new Image;
+    const dataURL = currentCanvas;
+    const img = new Image;
     img.src = dataURL;
     img.onload = function () {
         context.drawImage(img, 0, 0);
@@ -51,16 +51,16 @@ window.onload = function() {
       if (x < 0 || y < 0 || x >= pixelData.width || y >= pixelData.height) {
           return NaN;
       }
-      let pixels = pixelData.data;
-      let i = (y * pixelData.width + x) * 4;
+      const pixels = pixelData.data;
+      const i = (y * pixelData.width + x) * 4;
       return ((pixels[i + 0] & 0xFF) << 24) |
              ((pixels[i + 1] & 0xFF) << 16) |
              ((pixels[i + 2] & 0xFF) <<  8) |
              ((pixels[i + 3] & 0xFF) <<  0);
   }
   function setPixel(pixelData, x, y, color) {
-      let i = (y * pixelData.width + x) * 4;
-      let pixels = pixelData.data;
+      const i = (y * pixelData.width + x) * 4;
+      const pixels = pixelData.data;
       pixels[i + 0] = (color >>> 24) & 0xFF;
       pixels[i + 1] = (color >>> 16) & 0xFF;
       pixels[i + 2] = (color >>>  8) & 0xFF;
@@ -70,21 +70,21 @@ window.onload = function() {
       if (isNaN(c1) || isNaN(c2)) {
           return Infinity;
       }
-      let dr = ((c1 >>> 24) & 0xFF) - ((c2 >>> 24) & 0xFF);
-      let dg = ((c1 >>> 16) & 0xFF) - ((c2 >>> 16) & 0xFF);
-      let db = ((c1 >>>  8) & 0xFF) - ((c2 >>>  8) & 0xFF);
-      let da = ((c1 >>>  0) & 0xFF) - ((c2 >>>  0) & 0xFF);
+      const dr = ((c1 >>> 24) & 0xFF) - ((c2 >>> 24) & 0xFF);
+      const dg = ((c1 >>> 16) & 0xFF) - ((c2 >>> 16) & 0xFF);
+      const db = ((c1 >>>  8) & 0xFF) - ((c2 >>>  8) & 0xFF);
+      const da = ((c1 >>>  0) & 0xFF) - ((c2 >>>  0) & 0xFF);
       return dr*dr + dg*dg + db*db + da*da;
   }
   function floodFill(canvas, x, y, replacementColor, delta) {
       let current, w, e, stack, color, cx, cy;
-      let context = canvas.getContext("2d");
-      let pixelData = context.getImageData(0, 0, canvas.width, canvas.height);
-      let done = [];
+      const context = canvas.getContext("2d");
+      const pixelData = context.getImageData(0, 0, canvas.width, canvas.height);
+      const done = [];
       for (let i = 0; i < canvas.width; i++) {
           done[i] = [];
       }
-      let targetColor = getPixel(pixelData, x, y);
+      const targetColor = getPixel(pixelData, x, y);
       delta *= delta;
       stack = [ [x, y] ];
       done[x][y] = true;
@@ -127,7 +127,6 @@ window.onload = function() {
           }
       }
       context.putImageData(pixelData, 0, 0, 0, 0, canvas.width, canvas.height);
-      console.log(pixelData);
   }
   const red = '0xFF0000FF';
   const blue = '0x0000FFFF';
@@ -136,7 +135,7 @@ window.onload = function() {
   document.querySelector('.current-color').style.background = '#FF0000';
   let prevColor = grey;
   document.querySelector('.prev-color').style.background = '#808080';
-  let theInputColor = document.getElementById("select_color");
+  const theInputColor = document.getElementById("select_color");
   theInputColor.addEventListener("input", function() {
     document.querySelector('.prev-color').style.background = document.querySelector('.current-color').style.background;
     document.querySelector('.current-color').style.background = theInputColor.value;
@@ -167,8 +166,8 @@ window.onload = function() {
     document.querySelector('.current-color').style.background = t;
   });
   function selectColor(x, y) {
-    let pixelData = context.getImageData(x, y, 1, 1);
-    let pixels = pixelData.data;
+    const pixelData = context.getImageData(x, y, 1, 1);
+    const pixels = pixelData.data;
     prevColor = currentColor;
     currentColor = '0x' + rgbToHex(pixels[0], pixels[1], pixels[2]).substr(1) + 'FF';
     document.querySelector('.prev-color').style.background = document.querySelector('.current-color').style.background;
@@ -178,7 +177,7 @@ window.onload = function() {
     if (!isDrawing) return;
     x = Math.floor(x / scale) * scale;
     y = Math.floor(y / scale) * scale;
-    let pixelData = context.getImageData(x, y, scale, scale);
+    const pixelData = context.getImageData(x, y, scale, scale);
     for (let i = 0; i < scale * 4 * scale; i += 4) {
       pixelData.data[i] = (color >>> 24) & 0xFF;
       pixelData.data[i + 1] = (color >>> 16) & 0xFF;
