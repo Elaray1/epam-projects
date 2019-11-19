@@ -1,6 +1,6 @@
 function convertComponentToHex(c) {
   const hex = c.toString(16);
-  return hex.length == 1 ? "0" + hex : hex;
+  return hex.length === 1 ? "0" + hex : hex;
 }
 function rgbToHex(r, g, b) {
   return "#" + convertComponentToHex(r) + convertComponentToHex(g) + convertComponentToHex(b);
@@ -24,7 +24,7 @@ window.onload = function() {
       }
     }
   }
-  if (currentCanvas == null) {
+  if (currentCanvas === null) {
     drawDefaultCanvas();
   } else {
     const dataURL = currentCanvas;
@@ -194,7 +194,7 @@ window.onload = function() {
     }
   });
   canvas.addEventListener('mousedown', (e) => {
-    if (currentTool == 'pencil' || currentTool == pencil) {
+    if (currentTool === 'pencil' || currentTool === pencil) {
       isDrawing = true;
       [x, y] = [e.offsetX, e.offsetY];
       drow(x, y, currentColor);
@@ -206,22 +206,22 @@ window.onload = function() {
   canvas.addEventListener('click', (event) => {
     x = event.layerX;
     y = event.layerY;
-    if (currentTool == 'paint_bucket') {
+    if (currentTool === 'paint_bucket') {
       floodFill(canvas, x, y, currentColor, 1);
-    } else if (currentTool == 'choose_color') {
+    } else if (currentTool === 'choose_color') {
       selectColor(x, y);
     }
   })
   document.addEventListener('keydown', function(event) {
-    if (event.keyCode == 66) {
+    if (event.keyCode === 66) { //key b
       currentTool = 'paint_bucket';
       document.querySelector('.selected-tool').classList.remove('selected-tool');
       paintBucket.classList.add('selected-tool');
-    } else if (event.keyCode == 80) {
+    } else if (event.keyCode === 80) { //key p
       currentTool = 'pencil';
       document.querySelector('.selected-tool').classList.remove('selected-tool');
       pencil.classList.add('selected-tool');
-    } else if (event.keyCode == 67) {
+    } else if (event.keyCode === 67) { //key c
       currentTool = 'choose_color';
       document.querySelector('.selected-tool').classList.remove('selected-tool');
       chooseColor.classList.add('selected-tool');
