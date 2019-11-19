@@ -60,24 +60,24 @@ window.onload = () => {
       currentTool = el.getAttribute('id');
     })
   });
-  function getPixel(pixelData, x, y) {
-      if (x < 0 || y < 0 || x >= pixelData.width || y >= pixelData.height) {
+  function getPixel(pixelData, coordinateX, coordinateY) {
+      if (coordinateX < 0 || coordinateY < 0 || coordinateX >= pixelData.width || coordinateY >= pixelData.height) {
           return NaN;
       }
       const pixels = pixelData.data;
-      const i = (y * pixelData.width + x) * 4;
+      const i = (coordinateY * pixelData.width + coordinateX) * 4;
       return ((pixels[i + 0] & 0xFF) << 24) |
              ((pixels[i + 1] & 0xFF) << 16) |
              ((pixels[i + 2] & 0xFF) <<  8) |
              ((pixels[i + 3] & 0xFF) <<  0);
   }
-  function setPixel(pixelData, x, y, color) {
-      const i = (y * pixelData.width + x) * 4;
+  function setPixel(pixelData, coordinateX, coordinateY, currentColor) {
+      const i = (coordinateY * pixelData.width + coordinateX) * 4;
       const pixels = pixelData.data;
-      pixels[i + 0] = (color >>> 24) & 0xFF;
-      pixels[i + 1] = (color >>> 16) & 0xFF;
-      pixels[i + 2] = (color >>>  8) & 0xFF;
-      pixels[i + 3] = (color >>>  0) & 0xFF;
+      pixels[i + 0] = (currentColor >>> 24) & 0xFF;
+      pixels[i + 1] = (currentColor >>> 16) & 0xFF;
+      pixels[i + 2] = (currentColor >>>  8) & 0xFF;
+      pixels[i + 3] = (currentColor >>>  0) & 0xFF;
   }
   function diff(c1, c2) {
       if (isNaN(c1) || isNaN(c2)) {
