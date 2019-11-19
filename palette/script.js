@@ -16,6 +16,12 @@ window.onload = () => {
   const canvas = document.getElementById('canvas');
   const context = canvas.getContext("2d");
   const scale = 128;
+  const red = '0xFF0000FF';
+  const blue = '0x0000FFFF';
+  const grey = '0x808080FF';
+  const redColor = document.getElementById('red_color');
+  const blueColor = document.getElementById('blue_color');
+  const previousColor = document.getElementById('prev_color');
   function initialCanvas() {
     for (let row = 0; row < colorsArray.length; row++) {
       for (let col = 0; col < colorsArray[0].length; col++) {
@@ -128,9 +134,6 @@ window.onload = () => {
       }
       context.putImageData(pixelData, 0, 0, 0, 0, canvas.width, canvas.height);
   }
-  const red = '0xFF0000FF';
-  const blue = '0x0000FFFF';
-  const grey = '0x808080FF';
   let currentColor = red;
   document.querySelector('.current-color').style.background = '#FF0000';
   let prevColor = grey;
@@ -142,9 +145,6 @@ window.onload = () => {
     prevColor = currentColor;
     currentColor = '0x' + theInputColor.value.substr(1) + 'FF';
   }, false);
-  const redColor = document.getElementById('red_color');
-  const blueColor = document.getElementById('blue_color');
-  const previousColor = document.getElementById('prev_color');
   redColor.addEventListener('click', () => {
     prevColor = currentColor;
     currentColor = red;
