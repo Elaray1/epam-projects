@@ -258,7 +258,7 @@ window.onload = () => {
       pixelData.data[i + 2] = (currentColor >>>  8) & 0xFF;
       pixelData.data[i+ 3] = (currentColor >>>  0) & 0xFF;
     }
-    context.putImageData(pixelData, coordinateX, coordinateY);
+    context.putImageData(pixelData, xAxis, yAxis);
   }
   let isDrawing = false;
   canvas.addEventListener('mousemove', (e) => {
