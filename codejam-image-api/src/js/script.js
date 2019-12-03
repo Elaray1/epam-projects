@@ -1,3 +1,9 @@
+const colorsArray = [
+  ['00BCD4', 'FFEB3B','FFEB3B','00BCD4'],
+  ['FFEB3B', 'FFC107','FFC107','FFEB3B'],
+  ['FFEB3B', 'FFC107','FFC107','FFEB3B'],
+  ['00BCD4', 'FFEB3B','FFEB3B','00BCD4']
+];
 function convertComponentToHex(c) {
   const hex = c.toString(16);
   return hex.length === 1 ? '0' + hex : hex;
@@ -5,12 +11,6 @@ function convertComponentToHex(c) {
 function convertRgbToHex(red, green, blue) { //transform RGB format in HEX
   return '#' + convertComponentToHex(red) + convertComponentToHex(green) + convertComponentToHex(blue);
 }
-const colorsArray = [
-  ['00BCD4', 'FFEB3B','FFEB3B','00BCD4'],
-  ['FFEB3B', 'FFC107','FFC107','FFEB3B'],
-  ['FFEB3B', 'FFC107','FFC107','FFEB3B'],
-  ['00BCD4', 'FFEB3B','FFEB3B','00BCD4']
-];
 window.onload = () => {
   const currentCanvas = localStorage.getItem('currentCanvas');
   const canvas = document.getElementById('canvas');
@@ -48,7 +48,7 @@ window.onload = () => {
         center_x, center_y, img.width * ratio, img.height * ratio);
     };
   }
-  const grayscale = () => { // gray filter
+  const grayScale = () => { // gray filter
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
     const data = imageData.data;
     for (let i = 0; i < data.length; i += 4) {
@@ -306,7 +306,7 @@ window.onload = () => {
     getLinkToImage(keyWord);
   });
   blackAndWhite.addEventListener('click', () => {
-    grayscale();
+    grayScale();
   });
   window.addEventListener('beforeunload', () => {
     localStorage.setItem('currentCanvas', canvas.toDataURL());
