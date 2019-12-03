@@ -26,7 +26,6 @@ main {
   position: relative;
   display: flex;
   justify-content: space-between;
-  /* padding:  80px 155px 40px 30px; */
 }
 
 .tools {
