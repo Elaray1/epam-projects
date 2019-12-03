@@ -17,6 +17,8 @@ module.exports = {
     },
     "rules": {
       "no-unused-vars": "warn",
-      "no-console": "off"
+      "no-console": "off",
+      "quotes": [1, "single", { "avoidEscape": true }],
+      "semi": "warn",
     }
 };

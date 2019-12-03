@@ -1,20 +1,20 @@
 function convertComponentToHex(c) {
   const hex = c.toString(16);
-  return hex.length === 1 ? "0" + hex : hex;
+  return hex.length === 1 ? '0' + hex : hex;
 }
 function convertRgbToHex(red, green, blue) { //transform RGB format in HEX
-  return "#" + convertComponentToHex(red) + convertComponentToHex(green) + convertComponentToHex(blue);
+  return '#' + convertComponentToHex(red) + convertComponentToHex(green) + convertComponentToHex(blue);
 }
 const colorsArray = [
-  ["00BCD4", "FFEB3B","FFEB3B","00BCD4"],
-  ["FFEB3B", "FFC107","FFC107","FFEB3B"],
-  ["FFEB3B", "FFC107","FFC107","FFEB3B"],
-  ["00BCD4", "FFEB3B","FFEB3B","00BCD4"]
+  ['00BCD4', 'FFEB3B','FFEB3B','00BCD4'],
+  ['FFEB3B', 'FFC107','FFC107','FFEB3B'],
+  ['FFEB3B', 'FFC107','FFC107','FFEB3B'],
+  ['00BCD4', 'FFEB3B','FFEB3B','00BCD4']
 ];
 window.onload = () => {
-  const currentCanvas = localStorage.getItem("currentCanvas");
+  const currentCanvas = localStorage.getItem('currentCanvas');
   const canvas = document.getElementById('canvas');
-  const context = canvas.getContext("2d");
+  const context = canvas.getContext('2d');
   let scale = 1;
   const pencil = document.getElementById('pencil');
   const chooseColor = document.getElementById('choose_color');
@@ -34,7 +34,7 @@ window.onload = () => {
     const url = `https://api.unsplash.com/photos/random?query=town,${city}&client_id=${accessKey}`;
     const data = await fetch(url).then(res => res.json());
     const img = new Image();
-    img.crossOrigin = "Anonymous";
+    img.crossOrigin = 'Anonymous';
     img.src = data.urls.small;
     img.onload = function () {
       const wRatio = canvas.width / img.width;
@@ -42,11 +42,11 @@ window.onload = () => {
       const ratio = Math.min(wRatio, hRatio);
       const center_x = (canvas.width - img.width * ratio) / 2;
       const center_y = (canvas.height - img.height * ratio) / 2;
-      context.fillStyle = "rgb(192, 192, 192)";
+      context.fillStyle = 'rgb(192, 192, 192)';
       context.fillRect(0, 0, canvas.width, canvas.height);
       context.drawImage(img, 0, 0, img.width, img.height,
         center_x, center_y, img.width * ratio, img.height * ratio);
-    }
+    };
   }
   const grayscale = () => { // gray filter
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
@@ -73,22 +73,22 @@ window.onload = () => {
      canvas.height = size;
      scale = 512 / size;
      context.drawImage(img, 0, 0, img.width, img.height, 0, 0, size, size);
-   }
+   };
    img.src = canvas.toDataURL();
  }
    $(function() { //canvas size slider
-   $("#slider-range-pencil" ).slider({
-     range: "min",
+   $('#slider-range-pencil' ).slider({
+     range: 'min',
      value: 512,
      min: 128,
      max: 512,
      step: 128,
      slide: function( event, ui ) {
-       $("#pencil-size").val(ui.value);
+       $('#pencil-size').val(ui.value);
        setCanvasSize(ui.value);
      }
    });
-   $("#pencil-size").val($("#slider-range-pencil").slider("value"));
+   $('#pencil-size').val($('#slider-range-pencil').slider('value'));
  });
   function drawDefaultCanvas() { //drawing default canvas
     for (let row = 0; row < colorsArray.length; row++) {
@@ -117,7 +117,7 @@ window.onload = () => {
       document.querySelector('.selected-tool').classList.remove('selected-tool');
       el.classList.add('selected-tool');
       currentTool = el.getAttribute('id');
-    })
+    });
   });
   function getPixel(pixelData, coordinateX, coordinateY) { //secondary function for filling that takes pixel info
       if (coordinateX < 0 || coordinateY < 0 || coordinateX >= pixelData.width || coordinateY >= pixelData.height) {
@@ -152,7 +152,7 @@ window.onload = () => {
       const xAxis = Math.floor(coordinateX * canvas.width / maxSize);
       const yAxis = Math.floor(coordinateY * canvas.width / maxSize);
       let current, w, e, stack, color, currentX, currentY;
-      const context = canvas.getContext("2d");
+      const context = canvas.getContext('2d');
       const pixels = context.getImageData(xAxis, yAxis, 1, 1).data;
       if ('0x' + convertRgbToHex(pixels[0], pixels[1], pixels[2]).substr(1) + 'FF' === currentColor) {
         return;
@@ -210,8 +210,8 @@ window.onload = () => {
   document.querySelector('.current-color').style.background = '#FF0000';
   let prevColor = grey;
   document.querySelector('.prev-color').style.background = '#808080';
-  const theInputColor = document.getElementById("select_color");
-  theInputColor.addEventListener("input", function() {
+  const theInputColor = document.getElementById('select_color');
+  theInputColor.addEventListener('input', function() {
     document.querySelector('.prev-color').style.background = document.querySelector('.current-color').style.background;
     document.querySelector('.current-color').style.background = theInputColor.value;
     prevColor = currentColor;
@@ -285,7 +285,7 @@ window.onload = () => {
     } else if (currentTool === 'choose_color') {
       selectColor(coordinateX, coordinateY);
     }
-  })
+  });
   document.addEventListener('keydown', (event) => {
     if (event.keyCode === 66) { //keyCode of b
       currentTool = 'paint_bucket';
@@ -311,5 +311,5 @@ window.onload = () => {
   window.addEventListener('beforeunload', () => {
     localStorage.setItem('currentCanvas', canvas.toDataURL());
   });
-}
+};
 module.exports = convertRgbToHex;
