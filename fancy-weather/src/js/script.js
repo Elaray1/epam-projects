@@ -1,4 +1,5 @@
 import { getUserLocation } from './asyncFunctions';
+import { getYearTime } from './timeOfTheYear';
 
 window.onload = function () {
   async function getUserData() {
@@ -7,4 +8,6 @@ window.onload = function () {
   }
 
   getUserData();
+
+  console.log(getYearTime());
 };
