@@ -5,11 +5,15 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "start": "webpack --watch"
+    "start": "webpack --watch",
+    "lint": "eslint src/js/script.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"
   }
