@@ -1,4 +1,4 @@
-export const getYearTime = () => { // function that return time if the year (f.e. winter)
+export const getYearTime = () => { // function that return time of the year (f.e. winter)
   const timeOfTheYearObj = {
     1: 'winter',
     2: 'winter',
@@ -15,4 +15,9 @@ export const getYearTime = () => { // function that return time if the year (f.e
   };
   const number = new Date().getMonth() + 1;
   return timeOfTheYearObj[number];
+};
+
+export const getDayTime = () => { // function that return time of the day (f.e. morning)
+  const hours = new Date().getHours();
+  return hours < 6 ? 'night' : hours < 12 ? 'morning' : hours < 18 ? 'day' : hours < 23 ? 'evening' : 'night';
 };
