@@ -1,11 +1,8 @@
-import { getUserLocation } from './asyncFunctions';
+import { getUserLocation, getWeather } from './asyncFunctions';
 import { getYearTime, getDayTime } from './timeOfTheYear';
 
-window.onload = function () {
-  async function getUserData() {
-    const city = await getUserLocation();
-    return city;
-  }
-  console.log(getDayTime());
-  getUserData();
+window.onload = async function () {
+
+
+  console.log(await getWeather());
 };
