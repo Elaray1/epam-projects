@@ -18,5 +18,6 @@ module.exports = {
       "import/prefer-default-export": 0,
       "no-nested-ternary": 0,
       "object-curly-newline": 0,
+      "max-len": 0,
     }
 };

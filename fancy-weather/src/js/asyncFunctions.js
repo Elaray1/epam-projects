@@ -6,7 +6,7 @@ async function getUserCity() { // function that returns user's city.
   return data.city;
 }
 
-async function getUserTimeZone() { // function that returns user's city.
+async function getUserTimeZone() { // function that returns user's timeZone.
   const url = 'https://ipinfo.io/json?token=3ad064711c140a';
   const data = await fetch(url).then((res) => res.json());
   return data.timezone;
@@ -25,6 +25,13 @@ async function getWeatherByCity() { // function that returns weather on 3 days u
   return data;
 }
 
+async function getCityTemperature(degreesFormat) { // function that returns temperature and temperature icons for 3 days
+  const city = await getUserCity();
+  const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=${degreesFormat}&APPID=332b80fd8cd78e930da57a87c99f70ec`;
+  const data = await fetch(url).then((res) => res.json());
+  return [[Math.round(data.list[0].main.temp), data.list[0].weather[0].icon], [Math.round(data.list[8].main.temp), data.list[8].weather[0].icon], [Math.round(data.list[16].main.temp), data.list[16].weather[0].icon]];
+}
+
 async function getBgImage() { // function that returns background image
   const accessKey = '230f4057a5f3db6356e7ecc599dfea70f56ec7c5aa39f52fe4519034685dfd49';
   const city = await getUserCity();
@@ -38,4 +45,4 @@ async function getBgImage() { // function that returns background image
   body.style.backgroundImage = `url(${data.urls.full})`;
 }
 
-export { getUserLocation, getWeatherByCity, getBgImage, getUserCity, getUserTimeZone };
+export { getUserLocation, getWeatherByCity, getBgImage, getUserCity, getUserTimeZone, getCityTemperature };
