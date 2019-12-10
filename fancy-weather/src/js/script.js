@@ -10,6 +10,8 @@ window.onload = async function () {
   const controlBlockDiv = document.querySelector('.control-block');
   controlBlockDiv.insertAdjacentHTML('afterend', weatherForTodayBlock);
 
+  console.log(await getWeather());
+
 
   refreshBgButton.addEventListener('click', () => { // creates new background image
     getBgImage();
