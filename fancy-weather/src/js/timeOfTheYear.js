@@ -21,3 +21,10 @@ export const getDayTime = () => { // function that return time of the day (f.e. 
   const hours = new Date().getHours();
   return hours < 6 ? 'night' : hours < 12 ? 'morning' : hours < 18 ? 'day' : hours < 23 ? 'evening' : 'night';
 };
+
+export const getCurrentTime = (timeZone, lang) => { // function that returns current city time
+  const currentTime = new Date();
+  const options = { weekday: 'short', hour: '2-digit', minute: '2-digit', month: 'long', day: 'numeric', hour12: false, timeZone };
+  const time = currentTime.toLocaleString(lang, options);
+  return time;
+};
