@@ -8,10 +8,10 @@ export const weatherForTodayBlock = `<div class="weather-for-today">
             </div>
             <div class="weather-description">
               <div class="weather-description-params">
-                <p>Overcast</p>
-                <p>Feels like: 7°</p>
-                <p>Wind: 2 m/s </p>
-                <p>Humidity: 83%</p>
+                <p class="description">Overcast</p>
+                <p class="feels-like-temp">Feels like: 7°</p>
+                <p class="wind-speed">Wind: 2 m/s </p>
+                <p class="humidity">Humidity: 83%</p>
               </div>
             </div>
           </div>
