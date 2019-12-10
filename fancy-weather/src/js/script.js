@@ -3,6 +3,7 @@ import { getYearTime, getDayTime, getCurrentTime } from './timeOfTheYear';
 import { controlBlock } from './controlBlock';
 import { weatherForTodayBlock } from './weatherForToday';
 import { fullCountryNames } from './fullCountryNames';
+import { weatherFor3DaysBlock } from './weatherFor3Days';
 
 window.onload = async function () {
   let language = 'en';
@@ -12,6 +13,15 @@ window.onload = async function () {
   const refreshBgButton = document.getElementById('refresh-bg');
   const controlBlockDiv = document.querySelector('.control-block');
   controlBlockDiv.insertAdjacentHTML('afterend', weatherForTodayBlock);
+  const weatherBlock = document.querySelector('.weather-for-today');
+  weatherBlock.insertAdjacentHTML('afterend', weatherFor3DaysBlock);
+  let currentTemperature = await getCityTemperature(degreesFormat); // array that contains temperature and icons on current and next 3 days
+  for (let i = 1; i <= 3; i += 1) {
+    const elem = document.querySelector(`.weather-for-3-days_element-${i}`);
+    elem.firstElementChild.innerText = 'Monday';
+    elem.lastElementChild.firstElementChild.innerText = `${currentTemperature[i][0]}°`;
+    elem.lastElementChild.lastElementChild.setAttribute('src', `http://openweathermap.org/img/wn/${currentTemperature[i][1]}@2x.png`);
+  }
   const locationStr = document.querySelector('.weather-for-today h2');
   const currentTimeStr = document.querySelector('.weather-for-today h4');
   const temperatureForToday = document.querySelector('.temperature p');
@@ -37,11 +47,9 @@ window.onload = async function () {
   const userTimeZone = await getUserTimeZone();
   currentTimeStr.innerText = getCurrentTime(userTimeZone, language);
   locationStr.innerText = `${city}, ${fullCountryNames[countryCode]}`; // set user's country and city
-  let currentTemperature = await getCityTemperature(degreesFormat); // array that contains temperature and icons on current and next 3 days
   temperatureForToday.innerText = `${currentTemperature[0][0]}°`;
   temperaturForTodayImg.setAttribute('src', `http://openweathermap.org/img/wn/${currentTemperature[0][1]}@2x.png`);
 
-  // console.log(await getWeatherByCity());
   setInterval(() => {
     currentTimeStr.innerText = getCurrentTime(userTimeZone, language);
   }, 1000);
