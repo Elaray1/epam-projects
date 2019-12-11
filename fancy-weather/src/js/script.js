@@ -1,15 +1,16 @@
-import { getUserCity, getUserTimeZone, getUserLocation, getWeatherByCity, getBgImage, getCityTemperature, getWeatherDescription } from './asyncFunctions';
+import { getUserCity, getUserTimeZone, getUserLocation, getWeatherByCity, getBgImage, getCityTemperature, getWeatherDescription, showOnTheMap } from './asyncFunctions';
 import { getYearTime, getDayTime, getCurrentTime, getFutureDate } from './timeOfTheYear';
 import { controlBlock } from './controlBlock';
 import { weatherForTodayBlock } from './weatherForToday';
 import { fullCountryNames } from './fullCountryNames';
 import { weatherFor3DaysBlock } from './weatherFor3Days';
+import { mapBlock } from './map';
 
 window.onload = async function () {
   let language = 'en';
   let degreesFormat = 'metric'; // celsius (imperial -> fahrenheit)
   const contentWarapper = document.querySelector('.content-wrapper');
-  const htmlContent = `${controlBlock}<div class="weather-for-4-days">${weatherForTodayBlock}${weatherFor3DaysBlock}</div>`;
+  const htmlContent = `${controlBlock}<div class="weather-and-map"><div class="weather-for-4-days">${weatherForTodayBlock}${weatherFor3DaysBlock}</div>${mapBlock}</div>`;
   contentWarapper.insertAdjacentHTML('afterbegin', htmlContent);
   const refreshBgButton = document.getElementById('refresh-bg');
   const locationStr = document.querySelector('.weather-for-today h2');
@@ -36,7 +37,7 @@ window.onload = async function () {
       weatherForTodayHumidity.innerText = `Humidity: ${weatherDescription[3]}%`;
       break;
     default:
-      throw new Error();
+      throw new Error('Incorrect language');
   }
   const locationArray = await getUserLocation();
   const city = locationArray[0];
@@ -46,7 +47,7 @@ window.onload = async function () {
   locationStr.innerText = `${city}, ${fullCountryNames[countryCode]}`; // set user's country and city
   temperatureForToday.innerText = `${currentTemperature[0][0]}°`;
   temperaturForTodayImg.setAttribute('src', `http://openweathermap.org/img/wn/${currentTemperature[0][1]}@2x.png`);
-
+  showOnTheMap();
   setInterval(() => {
     currentTimeStr.innerText = getCurrentTime(userTimeZone, language);
   }, 1000);

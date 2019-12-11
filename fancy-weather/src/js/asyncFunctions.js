@@ -29,7 +29,11 @@ async function getCityTemperature(degreesFormat) { // function that returns temp
   const city = await getUserCity();
   const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=${degreesFormat}&APPID=332b80fd8cd78e930da57a87c99f70ec`;
   const data = await fetch(url).then((res) => res.json());
-  return [[Math.round(data.list[0].main.temp), data.list[0].weather[0].icon], [Math.round(data.list[8].main.temp), data.list[8].weather[0].icon], [Math.round(data.list[16].main.temp), data.list[16].weather[0].icon], [Math.round(data.list[24].main.temp), data.list[24].weather[0].icon]];
+  return [[Math.round(data.list[0].main.temp), data.list[0].weather[0].icon],
+    [Math.round(data.list[8].main.temp), data.list[8].weather[0].icon],
+    [Math.round(data.list[16].main.temp), data.list[16].weather[0].icon],
+    [Math.round(data.list[24].main.temp), data.list[24].weather[0].icon],
+  ];
 }
 
 async function getBgImage() { // function that returns background image
@@ -56,4 +60,26 @@ async function getWeatherDescription() { // function that return apparent temper
   return [data.list[0].weather[0].description, Math.round(feelsLikeTemp), Math.round(windSpeed), humidity];
 }
 
-export { getUserLocation, getWeatherByCity, getBgImage, getUserCity, getUserTimeZone, getCityTemperature, getWeatherDescription };
+async function showOnTheMap(...args) {
+  let lng; let lat;
+  if (!args.length) {
+    const data = await getWeatherByCity();
+    lng = data.city.coord.lon;
+    lat = data.city.coord.lat;
+  } else {
+    lng = args[0];
+    lat = args[1];
+  }
+  document.querySelector('.lon').innerText = `Longitude: ${lng}°`;
+  document.querySelector('.lat').innerText = `Latitude: ${lat}°`;
+  mapboxgl.accessToken = 'pk.eyJ1IjoiZWxhcmF5IiwiYSI6ImNrNDEyOWc2ZzA3ZGcza3BmeWNnc3U4cWIifQ.PyPYQwDUFrQnaFXpILz-_g';
+  const map = new mapboxgl.Map({
+    container: 'map', // container id
+    style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
+    center: [lng, lat], // starting position [lng, lat]
+    zoom: 9, // starting zoom
+  });
+  return map;
+}
+
+export { getUserLocation, getWeatherByCity, getBgImage, getUserCity, getUserTimeZone, getCityTemperature, getWeatherDescription, showOnTheMap };

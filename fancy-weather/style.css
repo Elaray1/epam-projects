@@ -230,3 +230,13 @@ body {
 	position: relative;
 	top: 0;
 }
+
+#map {
+		width: 375px;
+		height: 375px;
+}
+
+.weather-and-map {
+	display: flex;
+	justify-content: space-between;
+}

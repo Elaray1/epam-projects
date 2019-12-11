@@ -20,5 +20,6 @@ module.exports = {
       "object-curly-newline": 0,
       "max-len": 0,
       "prefer-destructuring": 0,
+      "no-undef": 0,
     }
 };
