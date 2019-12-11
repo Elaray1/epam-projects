@@ -142,7 +142,7 @@ body {
 .search-btn {
 	display: flex;
 	align-items: center;
-	padding: 14px 20px;
+	padding: 15px 20px;
 	background: rgba(174, 181, 185, 0.5);
 	border-radius: 5px;
 }
@@ -160,22 +160,17 @@ body {
 	cursor: pointer;
 }
 
-.weather-for-today {
-	display: inline-block;
-	margin-top: 60px;
-}
-
 .weather-for-today h2 {
 	font-weight: bold;
 	font-size: 44px;
-	line-height: 54px;
+	line-height: 55px;
 	text-transform: uppercase;
 }
 
 .weather-for-today h4 {
 	font-weight: 600;
 	font-size: 24px;
-	line-height: 29px;
+	line-height: 30px;
 }
 
 .temperature {
@@ -185,8 +180,8 @@ body {
 
 .temperature p {
 	font-weight: bold;
-	font-size: 306px;
-	line-height: 373px;
+	font-size: 300px;
+	line-height: 370px;
 }
 
 .weather-for-today_weather-description-block {
@@ -199,7 +194,7 @@ body {
 	align-items: center;
 	font-weight: bold;
 	font-size: 22px;
-	line-height: 37px;
+	line-height: 40px;
 	text-transform: uppercase;
 }
 
@@ -211,14 +206,14 @@ body {
 .weather-for-3-days_element p {
 	font-weight: bold;
 	font-size: 22px;
-	line-height: 27px;
+	line-height: 30px;
 	text-transform: uppercase;
 }
 
 .temperature-next-days p {
 	font-weight: 600;
 	font-size: 80px;
-	line-height: 98px;
+	line-height: 100px;
 }
 
 .temperature-next-days {
@@ -239,4 +234,12 @@ body {
 .weather-and-map {
 	display: flex;
 	justify-content: space-between;
+	margin-top: 60px;
+}
+
+.map-container p {
+	text-align: right;
+	font-weight: 600;
+	font-size: 20px;
+	line-height: 30px;
 }
