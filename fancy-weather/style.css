@@ -201,5 +201,32 @@ body {
 	font-size: 22px;
 	line-height: 37px;
 	text-transform: uppercase;
+}
 
+.weather-for-3-days {
+	display: flex;
+	justify-content: space-between;
+}
+
+.weather-for-3-days_element p {
+	font-weight: bold;
+	font-size: 22px;
+	line-height: 27px;
+	text-transform: uppercase;
+}
+
+.temperature-next-days p {
+	font-weight: 600;
+	font-size: 80px;
+	line-height: 98px;
+}
+
+.temperature-next-days {
+	display: flex;
+	justify-content: space-between;
+}
+
+.temperature-next-days img {
+	position: relative;
+	top: 0;
 }

@@ -28,3 +28,15 @@ export const getCurrentTime = (timeZone, lang) => { // function that returns cur
   const time = currentTime.toLocaleString(lang, options);
   return time;
 };
+
+export const getFutureDate = (days) => { // function that returns future week day
+  const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  let i = new Date().getDay() + days;
+  if (i < weekDays.length) {
+    return weekDays[i];
+  }
+  while (i >= weekDays.length) {
+    i -= weekDays.length;
+  }
+  return weekDays[i];
+};

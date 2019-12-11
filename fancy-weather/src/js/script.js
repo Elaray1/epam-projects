@@ -1,5 +1,5 @@
 import { getUserCity, getUserTimeZone, getUserLocation, getWeatherByCity, getBgImage, getCityTemperature, getWeatherDescription } from './asyncFunctions';
-import { getYearTime, getDayTime, getCurrentTime } from './timeOfTheYear';
+import { getYearTime, getDayTime, getCurrentTime, getFutureDate } from './timeOfTheYear';
 import { controlBlock } from './controlBlock';
 import { weatherForTodayBlock } from './weatherForToday';
 import { fullCountryNames } from './fullCountryNames';
@@ -9,19 +9,9 @@ window.onload = async function () {
   let language = 'en';
   let degreesFormat = 'metric'; // celsius (imperial -> fahrenheit)
   const contentWarapper = document.querySelector('.content-wrapper');
-  contentWarapper.insertAdjacentHTML('afterbegin', controlBlock);
+  const htmlContent = `${controlBlock}<div class="weather-for-4-days">${weatherForTodayBlock}${weatherFor3DaysBlock}</div>`;
+  contentWarapper.insertAdjacentHTML('afterbegin', htmlContent);
   const refreshBgButton = document.getElementById('refresh-bg');
-  const controlBlockDiv = document.querySelector('.control-block');
-  controlBlockDiv.insertAdjacentHTML('afterend', weatherForTodayBlock);
-  const weatherBlock = document.querySelector('.weather-for-today');
-  weatherBlock.insertAdjacentHTML('afterend', weatherFor3DaysBlock);
-  let currentTemperature = await getCityTemperature(degreesFormat); // array that contains temperature and icons on current and next 3 days
-  for (let i = 1; i <= 3; i += 1) {
-    const elem = document.querySelector(`.weather-for-3-days_element-${i}`);
-    elem.firstElementChild.innerText = 'Monday';
-    elem.lastElementChild.firstElementChild.innerText = `${currentTemperature[i][0]}°`;
-    elem.lastElementChild.lastElementChild.setAttribute('src', `http://openweathermap.org/img/wn/${currentTemperature[i][1]}@2x.png`);
-  }
   const locationStr = document.querySelector('.weather-for-today h2');
   const currentTimeStr = document.querySelector('.weather-for-today h4');
   const temperatureForToday = document.querySelector('.temperature p');
@@ -31,6 +21,13 @@ window.onload = async function () {
   const weatherForTodayWindSpeed = document.querySelector('.wind-speed');
   const weatherForTodayHumidity = document.querySelector('.humidity');
   const weatherDescription = await getWeatherDescription();
+  let currentTemperature = await getCityTemperature(degreesFormat); // array that contains temperature and icons on current and next 3 days
+  for (let i = 1; i <= 3; i += 1) {
+    const elem = document.querySelector(`.weather-for-3-days_element-${i}`);
+    elem.firstElementChild.innerText = getFutureDate(i);
+    elem.lastElementChild.firstElementChild.innerText = `${currentTemperature[i][0]}°`;
+    elem.lastElementChild.lastElementChild.setAttribute('src', `http://openweathermap.org/img/wn/${currentTemperature[i][1]}@2x.png`);
+  }
   switch (language) {
     case 'en':
       weatherForTodayDescription.innerText = weatherDescription[0];
