@@ -47,13 +47,12 @@ async function getWeatherByCity(...args) { // function that returns weather on 3
 
 async function getCityTemperature(...args) { // function that returns temperature and temperature icons for 3 days
   let city;
-  if (args.length > 1) {
-    city = args[1];
-  } else {
+  if (!args.length) {
     city = await getUserCity();
+  } else {
+    city = args[0];
   }
-  const degreesFormat = args[0];
-  const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=${degreesFormat}&APPID=332b80fd8cd78e930da57a87c99f70ec`;
+  const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
   const data = await fetch(url).then((res) => res.json());
   return [[Math.round(data.list[0].main.temp), data.list[0].weather[0].icon],
     [Math.round(data.list[8].main.temp), data.list[8].weather[0].icon],

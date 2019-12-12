@@ -8,7 +8,6 @@ import { mapBlock } from './map';
 
 window.onload = async function () {
   let language = 'en';
-  let degreesFormat = 'metric'; // celsius (imperial -> fahrenheit)
   const contentWarapper = document.querySelector('.content-wrapper');
   const htmlContent = `${controlBlock}<div class="weather-and-map"><div class="weather-for-4-days">${weatherForTodayBlock}${weatherFor3DaysBlock}</div>${mapBlock}</div>`;
   contentWarapper.insertAdjacentHTML('afterbegin', htmlContent);
@@ -23,7 +22,7 @@ window.onload = async function () {
   const weatherForTodayHumidity = document.querySelector('.humidity');
   const searchInput = document.getElementById('search-input');
   const searchBtn = document.getElementById('search-btn');
-  let currentTemperature = await getCityTemperature(degreesFormat); // array that contains temperature and icons on current and next 3 days
+  let currentTemperature = await getCityTemperature(); // array that contains temperature and icons on current and next 3 days
   const setTemperatureFor3Days = () => {
     for (let i = 1; i <= 3; i += 1) {
       const elem = document.querySelector(`.weather-for-3-days_element-${i}`);
@@ -66,7 +65,7 @@ window.onload = async function () {
     countryCode = locationArray[1];
     currentTimeStr.innerText = await getCurrentTime(language, city);
     getBgImage(city);
-    currentTemperature = await getCityTemperature(degreesFormat, city);
+    currentTemperature = await getCityTemperature(city);
     locationStr.innerText = `${city}, ${fullCountryNames[countryCode]}`;
     temperatureForToday.innerText = `${currentTemperature[0][0]}°`;
     temperaturForTodayImg.setAttribute('src', `http://openweathermap.org/img/wn/${currentTemperature[0][1]}@2x.png`);
