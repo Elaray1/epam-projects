@@ -41,7 +41,7 @@ window.onload = async function () {
     weatherForTodayWindSpeed.innerText = `Wind: ${weatherDescription[2]} m/s`;
     weatherForTodayHumidity.innerText = `Humidity: ${weatherDescription[3]}%`;
   };
-  setweatherDescription();
+  setweatherDescription(await getUserLocation());
   let locationArray = await getUserLocation();
   let city = locationArray[0];
   let countryCode = locationArray[1];
@@ -55,16 +55,16 @@ window.onload = async function () {
   showOnTheMap();
   searchBtn.addEventListener('click', async () => {
     if (await getCoordinates(searchInput.value) === -1) {
-      searchInput.value = '';
+      searchInput.value = language === 'en' ? 'Incorrect city name' : language === 'ru' ? 'Неправильное название города' : 'Няправільная назва горада';
       return;
     }
     const [lng, lat] = await getCoordinates(searchInput.value);
     searchInput.value = '';
     showOnTheMap(lng, lat);
-    currentTimeStr.innerText = await getCurrentTime(language);
     locationArray = await getUserLocation(lng, lat);
     city = locationArray[0];
     countryCode = locationArray[1];
+    currentTimeStr.innerText = await getCurrentTime(language, city);
     getBgImage(city);
     currentTemperature = await getCityTemperature(degreesFormat, city);
     locationStr.innerText = `${city}, ${fullCountryNames[countryCode]}`;

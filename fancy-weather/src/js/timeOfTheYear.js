@@ -21,11 +21,17 @@ export const getYearTime = () => { // function that return time of the year (f.e
 
 export const getDayTime = (hours) => (hours < 6 ? 'night' : hours < 12 ? 'morning' : hours < 18 ? 'day' : hours < 23 ? 'evening' : 'night');
 
-export async function getCurrentTime(lang) { // function that returns current city time
-  const timeZone = await getUserTimeZone();
+export async function getCurrentTime(...args) { // function that returns current city time
+  let timeZone;
+  if (args.length < 2) {
+    timeZone = await getUserTimeZone();
+  } else {
+    timeZone = await getUserTimeZone(args[1]);
+    console.log(timeZone);
+  }
   const currentTime = new Date();
   const options = { weekday: 'short', hour: '2-digit', minute: '2-digit', month: 'long', day: 'numeric', hour12: false, timeZone };
-  const time = currentTime.toLocaleString(lang, options);
+  const time = currentTime.toLocaleString(args[0], options);
   return time;
 }
 

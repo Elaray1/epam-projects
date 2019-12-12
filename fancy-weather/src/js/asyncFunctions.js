@@ -1,4 +1,4 @@
-import { getYearTime, getCurrentTime, getDayTime } from './timeOfTheYear';
+import { getYearTime, getDayTime } from './timeOfTheYear';
 
 async function getUserCity() { // function that returns user's city.
   const url = 'https://ipinfo.io/json?token=3ad064711c140a';
@@ -27,7 +27,7 @@ async function getUserLocation(...args) { // function that returns user's locati
   if (args.length === 1) {
     url = `https://api.openweathermap.org/data/2.5/forecast?q=${args[0]}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
   } else {
-    url = `https://api.openweathermap.org/data/2.5/forecast?lat=${args[1]}&lon=${args[0]}&APPID=332b80fd8cd78e930da57a87c99f70ec`;
+    url = `https://api.openweathermap.org/data/2.5/forecast?lat=${args[1]}&lon=${args[0]}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
   }
   const data = await fetch(url).then((res) => res.json());
   return [data.city.name, data.city.country];
@@ -129,7 +129,7 @@ async function showOnTheMap(...args) {
 
 async function getCoordinates(city) {
   const data = await getWeatherByCity(city);
-  if (data.cod === '404') {
+  if (data.cod === '404' || data.cod === '400') {
     return -1;
   }
   const lng = data.city.coord.lon;
