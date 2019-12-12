@@ -24,10 +24,10 @@ async function getUserLocation(...args) { // function that returns user's locati
     const data = await fetch(url).then((res) => res.json());
     return [data.city, data.country];
   }
-  if (argth.length === 1) {
+  if (args.length === 1) {
     url = `https://api.openweathermap.org/data/2.5/forecast?q=${args[0]}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
   } else {
-    url = `api.openweathermap.org/data/2.5/forecast?lat=${args[1]}&lon=${args[0]}&APPID=332b80fd8cd78e930da57a87c99f70ec`;
+    url = `https://api.openweathermap.org/data/2.5/forecast?lat=${args[1]}&lon=${args[0]}&APPID=332b80fd8cd78e930da57a87c99f70ec`;
   }
   const data = await fetch(url).then((res) => res.json());
   return [data.city.name, data.city.country];
@@ -42,7 +42,6 @@ async function getWeatherByCity(...args) { // function that returns weather on 3
   }
   const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
   const data = await fetch(url).then((res) => res.json());
-  console.log(data);
   return data;
 }
 
@@ -51,10 +50,9 @@ async function getCityTemperature(...args) { // function that returns temperatur
   if (args.length > 1) {
     city = args[1];
   } else {
-    city = getUserCity();
+    city = await getUserCity();
   }
   const degreesFormat = args[0];
-
   const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=${degreesFormat}&APPID=332b80fd8cd78e930da57a87c99f70ec`;
   const data = await fetch(url).then((res) => res.json());
   return [[Math.round(data.list[0].main.temp), data.list[0].weather[0].icon],
@@ -77,17 +75,20 @@ async function getBgImage(...args) { // function that returns background image
   }
   weather = weather.list[0].weather[0].main;
   const yearTime = await getYearTime();
-  let dayHours = await getCurrentTime('en');
-  dayHours = dayHours.getHours();
-  const dayTime = getDayTime(dayHours);
+  const dayTime = getDayTime(new Date().getHours());
   const url = `https://api.unsplash.com/photos/random?query=${yearTime},${weather},${dayTime},${city}&client_id=${accessKey}`;
   const data = await fetch(url).then((res) => res.json());
   const body = document.querySelector('body');
   body.style.backgroundImage = `url(${data.urls.full})`;
 }
 
-async function getWeatherDescriptionForToday() { // function that return apparent temperature, summary, wind speed and humidity
-  const city = await getUserCity();
+async function getWeatherDescriptionForToday(...args) { // function that return apparent temperature, summary, wind speed and humidity
+  let city;
+  if (!args.length) {
+    city = await getUserCity();
+  } else {
+    city = args[0];
+  }
   const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
   const data = await fetch(url).then((res) => res.json());
   const celsiusTemp = data.list[0].main.temp;
@@ -128,7 +129,7 @@ async function showOnTheMap(...args) {
 
 async function getCoordinates(city) {
   const data = await getWeatherByCity(city);
-  if (data.city === '') {
+  if (data.cod === '404') {
     return -1;
   }
   const lng = data.city.coord.lon;

@@ -23,7 +23,6 @@ window.onload = async function () {
   const weatherForTodayHumidity = document.querySelector('.humidity');
   const searchInput = document.getElementById('search-input');
   const searchBtn = document.getElementById('search-btn');
-  const weatherDescription = await getWeatherDescriptionForToday();
   let currentTemperature = await getCityTemperature(degreesFormat); // array that contains temperature and icons on current and next 3 days
   const setTemperatureFor3Days = () => {
     for (let i = 1; i <= 3; i += 1) {
@@ -35,16 +34,14 @@ window.onload = async function () {
   };
   // getBgImage();
   setTemperatureFor3Days();
-  switch (language) {
-    case 'en':
-      weatherForTodayDescription.innerText = weatherDescription[0];
-      weatherForTodayFeelsLikeTemp.innerText = `Feels like: ${weatherDescription[1]}°`;
-      weatherForTodayWindSpeed.innerText = `Wind: ${weatherDescription[2]} m/s`;
-      weatherForTodayHumidity.innerText = `Humidity: ${weatherDescription[3]}%`;
-      break;
-    default:
-      throw new Error('Incorrect language');
-  }
+  const setweatherDescription = async (city) => {
+    const weatherDescription = await getWeatherDescriptionForToday(city);
+    weatherForTodayDescription.innerText = weatherDescription[0];
+    weatherForTodayFeelsLikeTemp.innerText = `Feels like: ${weatherDescription[1]}°`;
+    weatherForTodayWindSpeed.innerText = `Wind: ${weatherDescription[2]} m/s`;
+    weatherForTodayHumidity.innerText = `Humidity: ${weatherDescription[3]}%`;
+  };
+  setweatherDescription();
   let locationArray = await getUserLocation();
   let city = locationArray[0];
   let countryCode = locationArray[1];
@@ -57,18 +54,23 @@ window.onload = async function () {
   }, 1000);
   showOnTheMap();
   searchBtn.addEventListener('click', async () => {
-    if (getCoordinates(searchInput.value) === -1) {
+    if (await getCoordinates(searchInput.value) === -1) {
+      searchInput.value = '';
       return;
     }
-    const [lng, lat] = getCoordinates(searchInput.value);
+    const [lng, lat] = await getCoordinates(searchInput.value);
+    searchInput.value = '';
     showOnTheMap(lng, lat);
     currentTimeStr.innerText = await getCurrentTime(language);
     locationArray = await getUserLocation(lng, lat);
     city = locationArray[0];
     countryCode = locationArray[1];
     getBgImage(city);
-    locationStr.innerText = `${city}, ${fullCountryNames[countryCode]}`;
     currentTemperature = await getCityTemperature(degreesFormat, city);
+    locationStr.innerText = `${city}, ${fullCountryNames[countryCode]}`;
+    temperatureForToday.innerText = `${currentTemperature[0][0]}°`;
+    temperaturForTodayImg.setAttribute('src', `http://openweathermap.org/img/wn/${currentTemperature[0][1]}@2x.png`);
+    setweatherDescription(city);
     setTemperatureFor3Days();
   });
   refreshBgButton.addEventListener('click', () => { // creates new background image
