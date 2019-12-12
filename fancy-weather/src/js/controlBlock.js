@@ -28,7 +28,7 @@ export const controlBlock = `<div class="control-block">
         <input id="search-input" type="text">
         <img src="../fancy-weather/assets/micrrofon.png" width="14.5" height="17">
       </div>
-      <div class="search-btn">
+      <div id="search-btn" class="search-btn">
         <p>SEARCH</p>
       </div>
     </div>

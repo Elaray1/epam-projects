@@ -4,7 +4,7 @@ export const weatherForTodayBlock = `<div class="weather-for-today">
           <div class="weather-for-today_weather-description-block">
             <div class="temperature">
               <p></p>
-              <img src="" width="150" height="150">
+              <img src="">
             </div>
             <div class="weather-description">
               <div class="weather-description-params">

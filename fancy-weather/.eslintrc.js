@@ -21,5 +21,7 @@ module.exports = {
       "max-len": 0,
       "prefer-destructuring": 0,
       "no-undef": 0,
+      "no-bitwise": 0,
+      "import/no-cycle": 0,
     }
 };

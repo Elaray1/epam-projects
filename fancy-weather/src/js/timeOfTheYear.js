@@ -1,3 +1,5 @@
+import { getUserTimeZone } from './asyncFunctions';
+
 export const getYearTime = () => { // function that return time of the year (f.e. winter)
   const timeOfTheYearObj = {
     1: 'winter',
@@ -17,17 +19,15 @@ export const getYearTime = () => { // function that return time of the year (f.e
   return timeOfTheYearObj[number];
 };
 
-export const getDayTime = () => { // function that return time of the day (f.e. morning)
-  const hours = new Date().getHours();
-  return hours < 6 ? 'night' : hours < 12 ? 'morning' : hours < 18 ? 'day' : hours < 23 ? 'evening' : 'night';
-};
+export const getDayTime = (hours) => (hours < 6 ? 'night' : hours < 12 ? 'morning' : hours < 18 ? 'day' : hours < 23 ? 'evening' : 'night');
 
-export const getCurrentTime = (timeZone, lang) => { // function that returns current city time
+export async function getCurrentTime(lang) { // function that returns current city time
+  const timeZone = await getUserTimeZone();
   const currentTime = new Date();
   const options = { weekday: 'short', hour: '2-digit', minute: '2-digit', month: 'long', day: 'numeric', hour12: false, timeZone };
   const time = currentTime.toLocaleString(lang, options);
   return time;
-};
+}
 
 export const getFutureDate = (days) => { // function that returns future week day
   const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];

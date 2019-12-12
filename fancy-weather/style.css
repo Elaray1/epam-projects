@@ -153,7 +153,9 @@ body {
 }
 
 .content-wrapper {
-	padding: 40px 90px 100px;
+	max-width: 1260px;
+	padding: 40px 0px 100px;
+	margin: 0 auto;
 }
 
 #refresh-bg {
@@ -242,4 +244,13 @@ body {
 	font-weight: 600;
 	font-size: 20px;
 	line-height: 30px;
+}
+
+.lon {
+	margin-top: 10px;
+}
+
+.temperature img {
+	width: 150px;
+	height: 150px;
 }

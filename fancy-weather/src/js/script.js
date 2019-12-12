@@ -1,4 +1,4 @@
-import { getUserCity, getUserTimeZone, getUserLocation, getWeatherByCity, getBgImage, getCityTemperature, getWeatherDescription, showOnTheMap } from './asyncFunctions';
+import { getUserCity, getUserTimeZone, getUserLocation, getWeatherByCity, getBgImage, getCityTemperature, getWeatherDescriptionForToday, showOnTheMap, getCoordinates } from './asyncFunctions';
 import { getYearTime, getDayTime, getCurrentTime, getFutureDate } from './timeOfTheYear';
 import { controlBlock } from './controlBlock';
 import { weatherForTodayBlock } from './weatherForToday';
@@ -21,14 +21,20 @@ window.onload = async function () {
   const weatherForTodayFeelsLikeTemp = document.querySelector('.feels-like-temp');
   const weatherForTodayWindSpeed = document.querySelector('.wind-speed');
   const weatherForTodayHumidity = document.querySelector('.humidity');
-  const weatherDescription = await getWeatherDescription();
+  const searchInput = document.getElementById('search-input');
+  const searchBtn = document.getElementById('search-btn');
+  const weatherDescription = await getWeatherDescriptionForToday();
   let currentTemperature = await getCityTemperature(degreesFormat); // array that contains temperature and icons on current and next 3 days
-  for (let i = 1; i <= 3; i += 1) {
-    const elem = document.querySelector(`.weather-for-3-days_element-${i}`);
-    elem.firstElementChild.innerText = getFutureDate(i);
-    elem.lastElementChild.firstElementChild.innerText = `${currentTemperature[i][0]}°`;
-    elem.lastElementChild.lastElementChild.setAttribute('src', `http://openweathermap.org/img/wn/${currentTemperature[i][1]}@2x.png`);
-  }
+  const setTemperatureFor3Days = () => {
+    for (let i = 1; i <= 3; i += 1) {
+      const elem = document.querySelector(`.weather-for-3-days_element-${i}`);
+      elem.firstElementChild.innerText = getFutureDate(i);
+      elem.lastElementChild.firstElementChild.innerText = `${currentTemperature[i][0]}°`;
+      elem.lastElementChild.lastElementChild.setAttribute('src', `http://openweathermap.org/img/wn/${currentTemperature[i][1]}@2x.png`);
+    }
+  };
+  // getBgImage();
+  setTemperatureFor3Days();
   switch (language) {
     case 'en':
       weatherForTodayDescription.innerText = weatherDescription[0];
@@ -39,19 +45,33 @@ window.onload = async function () {
     default:
       throw new Error('Incorrect language');
   }
-  const locationArray = await getUserLocation();
-  const city = locationArray[0];
-  const countryCode = locationArray[1];
-  const userTimeZone = await getUserTimeZone();
-  currentTimeStr.innerText = getCurrentTime(userTimeZone, language);
+  let locationArray = await getUserLocation();
+  let city = locationArray[0];
+  let countryCode = locationArray[1];
+  currentTimeStr.innerText = await getCurrentTime(language);
   locationStr.innerText = `${city}, ${fullCountryNames[countryCode]}`; // set user's country and city
   temperatureForToday.innerText = `${currentTemperature[0][0]}°`;
   temperaturForTodayImg.setAttribute('src', `http://openweathermap.org/img/wn/${currentTemperature[0][1]}@2x.png`);
-  showOnTheMap();
-  setInterval(() => {
-    currentTimeStr.innerText = getCurrentTime(userTimeZone, language);
+  setInterval(async () => {
+    currentTimeStr.innerText = await getCurrentTime(language);
   }, 1000);
+  showOnTheMap();
+  searchBtn.addEventListener('click', async () => {
+    if (getCoordinates(searchInput.value) === -1) {
+      return;
+    }
+    const [lng, lat] = getCoordinates(searchInput.value);
+    showOnTheMap(lng, lat);
+    currentTimeStr.innerText = await getCurrentTime(language);
+    locationArray = await getUserLocation(lng, lat);
+    city = locationArray[0];
+    countryCode = locationArray[1];
+    getBgImage(city);
+    locationStr.innerText = `${city}, ${fullCountryNames[countryCode]}`;
+    currentTemperature = await getCityTemperature(degreesFormat, city);
+    setTemperatureFor3Days();
+  });
   refreshBgButton.addEventListener('click', () => { // creates new background image
-    getBgImage();
+    getBgImage(city);
   });
 };
