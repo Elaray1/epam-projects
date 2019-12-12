@@ -44,12 +44,12 @@ window.onload = async function () {
   let locationArray = await getUserLocation();
   let city = locationArray[0];
   let countryCode = locationArray[1];
-  currentTimeStr.innerText = await getCurrentTime(language);
+  currentTimeStr.innerText = await getCurrentTime();
   locationStr.innerText = `${city}, ${fullCountryNames[countryCode]}`; // set user's country and city
   temperatureForToday.innerText = `${currentTemperature[0][0]}°`;
   temperaturForTodayImg.setAttribute('src', `http://openweathermap.org/img/wn/${currentTemperature[0][1]}@2x.png`);
   setInterval(async () => {
-    currentTimeStr.innerText = await getCurrentTime(language, city);
+    currentTimeStr.innerText = await getCurrentTime(city);
   }, 1000);
   showOnTheMap();
   searchBtn.addEventListener('click', async () => {
@@ -63,7 +63,7 @@ window.onload = async function () {
     locationArray = await getUserLocation(lng, lat);
     city = locationArray[0];
     countryCode = locationArray[1];
-    currentTimeStr.innerText = await getCurrentTime(language, city);
+    currentTimeStr.innerText = await getCurrentTime(city);
     getBgImage(city);
     currentTemperature = await getCityTemperature(city);
     locationStr.innerText = `${city}, ${fullCountryNames[countryCode]}`;

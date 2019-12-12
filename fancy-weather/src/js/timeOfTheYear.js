@@ -1,5 +1,6 @@
 import { getUserTimeZone } from './asyncFunctions';
 
+let date = new Date();
 export const getYearTime = () => { // function that return time of the year (f.e. winter)
   const timeOfTheYearObj = {
     1: 'winter',
@@ -23,12 +24,11 @@ export const getDayTime = (hours) => (hours < 6 ? 'night' : hours < 12 ? 'mornin
 
 export async function getCurrentTime(...args) { // function that returns current city time
   let timeZone;
-  let date;
-  if (args.length < 2) {
+  if (!args.length) {
     date = new Date();
     timeZone = await getUserTimeZone();
   } else {
-    timeZone = await getUserTimeZone(args[1]);
+    timeZone = await getUserTimeZone(args[0]);
     if (timeZone === 10800) {
       date = new Date(Date.now());
     } else {
@@ -36,13 +36,13 @@ export async function getCurrentTime(...args) { // function that returns current
     }
   }
   const options = { weekday: 'short', hour: '2-digit', minute: '2-digit', month: 'long', day: 'numeric', hour12: false };
-  const time = date.toLocaleString(args[0], options);
+  const time = date.toLocaleString('en', options);
   return time;
 }
 
 export const getFutureDate = (days) => { // function that returns future week day
   const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  let i = new Date().getDay() + days;
+  let i = date.getDay() + days;
   if (i < weekDays.length) {
     return weekDays[i];
   }
