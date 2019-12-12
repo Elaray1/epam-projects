@@ -23,15 +23,20 @@ export const getDayTime = (hours) => (hours < 6 ? 'night' : hours < 12 ? 'mornin
 
 export async function getCurrentTime(...args) { // function that returns current city time
   let timeZone;
+  let date;
   if (args.length < 2) {
+    date = new Date();
     timeZone = await getUserTimeZone();
   } else {
     timeZone = await getUserTimeZone(args[1]);
-    console.log(timeZone);
+    if (timeZone === 10800) {
+      date = new Date(Date.now());
+    } else {
+      date = new Date(Date.now() - 10800000 + timeZone * 1000);
+    }
   }
-  const currentTime = new Date();
-  const options = { weekday: 'short', hour: '2-digit', minute: '2-digit', month: 'long', day: 'numeric', hour12: false, timeZone };
-  const time = currentTime.toLocaleString(args[0], options);
+  const options = { weekday: 'short', hour: '2-digit', minute: '2-digit', month: 'long', day: 'numeric', hour12: false };
+  const time = date.toLocaleString(args[0], options);
   return time;
 }
 

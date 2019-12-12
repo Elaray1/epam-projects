@@ -50,7 +50,7 @@ window.onload = async function () {
   temperatureForToday.innerText = `${currentTemperature[0][0]}°`;
   temperaturForTodayImg.setAttribute('src', `http://openweathermap.org/img/wn/${currentTemperature[0][1]}@2x.png`);
   setInterval(async () => {
-    currentTimeStr.innerText = await getCurrentTime(language);
+    currentTimeStr.innerText = await getCurrentTime(language, city);
   }, 1000);
   showOnTheMap();
   searchBtn.addEventListener('click', async () => {
