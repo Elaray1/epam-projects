@@ -170,7 +170,7 @@ window.onload = async function () {
       temperatureForToday.innerText = `${Math.round((9 / 5) * currentTemperature[0][0] + 32)}°`;
     }
     temperaturForTodayImg.setAttribute('src', `http://openweathermap.org/img/wn/${currentTemperature[0][1]}@2x.png`);
-    setweatherDescription(city);
+    await setweatherDescription(city);
     setTemperatureFor3Days();
     switchSiteLanguage();
   });
