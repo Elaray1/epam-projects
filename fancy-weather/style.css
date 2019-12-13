@@ -159,7 +159,7 @@ body {
 
 .content-wrapper {
 	max-width: 1260px;
-	padding: 40px 0px 100px;
+	padding: 40px 20px 100px;
 	margin: 0 auto;
 }
 
@@ -187,7 +187,7 @@ body {
 
 .temperature p {
 	font-weight: bold;
-	font-size: 300px;
+	font-size: 230px;
 	line-height: 370px;
 }
 
@@ -207,7 +207,8 @@ body {
 
 .weather-for-3-days {
 	display: flex;
-	justify-content: space-between;
+	justify-content: space-around;
+	flex-wrap: wrap;
 }
 
 .weather-for-3-days_element p {
@@ -258,4 +259,127 @@ body {
 .temperature img {
 	width: 150px;
 	height: 150px;
+}
+
+@media (max-width: 1100px) {
+	.weather-description,
+	.map-container p {
+		font-size: 17px;
+	}
+	#map {
+		width: 290px;
+		height: 290px;
+	}
+	.temperature img {
+		width: 100px;
+		height: 100px;
+	}
+}
+
+@media (max-width: 900px) {
+	.temperature p {
+    font-size: 170px;
+	}
+
+	.weather-for-today_weather-description-block {
+		justify-content: flex-start;
+	}
+
+	.weather-for-3-days_element p {
+		font-size: 17px;
+	}
+
+	.temperature-next-days img {
+		width: 80px;
+		height: 80px;
+	}
+
+	.temperature-next-days p {
+		font-size: 60px;
+	}
+
+	.weather-and-map {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.map-container {
+		margin-top: 30px;
+	}
+}
+
+@media (max-width: 700px) {
+	#search-input {
+		width: 150px;
+	}
+
+	#refresh-bg,
+	.control-block_languages,
+	.labels-for-degrees-inputs div,
+	.control-block_search {
+		height: 30px;
+	}
+
+	#refresh-bg {
+		width: 30px;
+	}
+
+	.search-input {
+		padding: 6px;
+	}
+
+	#search-btn p {
+		font-size: 14px;
+	}
+}
+
+@media (max-width: 550px) {
+	.control-block {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.control-block_search {
+		margin-top: 25px;
+	}
+
+	.weather-for-today h2,
+	.weather-for-today h4 {
+		text-align: center;
+	}
+
+	.temperature p {
+    font-size: 100px;
+		line-height: 200px;
+	}
+
+	.temperature img {
+    width: 80px;
+    height: 80px;
+	}
+
+	.weather-for-today h2 {
+		font-size: 30px;
+	}
+
+	.weather-for-today h4 {
+		font-size: 19px;
+	}
+
+	.weather-for-today_weather-description-block {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.weather-description-params {
+		margin-bottom: 25px;
+	}
+
+	.weather-description {
+		font-size: 15px;
+	}
+
+	.weather-for-3-days_element-2 {
+		margin: 0 20px;
+	}
 }
