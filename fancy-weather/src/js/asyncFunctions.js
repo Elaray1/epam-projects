@@ -114,8 +114,6 @@ async function showOnTheMap(...args) {
     lng = args[0];
     lat = args[1];
   }
-  document.querySelector('.lon').innerText = `Longitude: ${convertDDToDMS(lng)}`;
-  document.querySelector('.lat').innerText = `Latitude: ${convertDDToDMS(lat)}`;
   mapboxgl.accessToken = 'pk.eyJ1IjoiZWxhcmF5IiwiYSI6ImNrNDEyOWc2ZzA3ZGcza3BmeWNnc3U4cWIifQ.PyPYQwDUFrQnaFXpILz-_g';
   const map = new mapboxgl.Map({
     container: 'map', // container id
@@ -136,4 +134,10 @@ async function getCoordinates(city) {
   return [lng, lat];
 }
 
-export { getUserLocation, getWeatherByCity, getBgImage, getUserCity, getUserTimeZone, getCityTemperature, getWeatherDescriptionForToday, showOnTheMap, getCoordinates };
+async function translateText(text, lang) {
+  const url = `https://translate.yandex.net/api/v1.5/tr.json/translate?lang=${lang}&text=${text}&key=trnsl.1.1.20191213T134804Z.f3c0207ae1bd61a1.4a6247447729b96142973c7e4dbea3a2683640a1`;
+  const data = await fetch(url).then((res) => res.json());
+  return data.text[0];
+}
+
+export { getUserLocation, getWeatherByCity, getBgImage, getUserCity, getUserTimeZone, getCityTemperature, getWeatherDescriptionForToday, showOnTheMap, getCoordinates, convertDDToDMS, translateText };
