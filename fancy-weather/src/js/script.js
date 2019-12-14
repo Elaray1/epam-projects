@@ -7,7 +7,8 @@ import { weatherFor3DaysBlock } from './weatherFor3Days';
 import { mapBlock } from './map';
 import { weatherArrayEng, weatherArrayRu, weatherArrayBe } from './weatherArrays';
 
-window.onload = async function () {
+// window.onload = async function () {
+(async function () {
   let language;
   if (localStorage.getItem('language') !== null) {
     language = localStorage.getItem('language');
@@ -37,6 +38,10 @@ window.onload = async function () {
   const searchInput = document.getElementById('search-input');
   const searchBtn = document.getElementById('search-btn');
   const languageBlock = document.querySelector('select');
+  const microfonImg = document.getElementById('microfon-img');
+  const recognition = new webkitSpeechRecognition();
+  let isMicro = false;
+  recognition.interimResults = true;
   let [lng, lat] = await getCoordinates(await getUserCity());
 
   languageBlock.value = language;
@@ -148,7 +153,12 @@ window.onload = async function () {
   showOnTheMap();
   document.querySelector('.lon').innerText = `${longitude}: ${convertDDToDMS(lng)}`;
   document.querySelector('.lat').innerText = `${latitude}: ${convertDDToDMS(lat)}`;
+
   searchBtn.addEventListener('click', async () => {
+    if (isMicro) {
+      microfonImg.setAttribute('src', 'assets/micrrofon.png');
+      recognition.stop();
+    }
     if (await getCoordinates(searchInput.value) === -1) {
       searchInput.value = language === 'en' ? 'Incorrect city name' : language === 'ru' ? 'Неправильное название города' : 'Няправільная назва горада';
       return;
@@ -204,12 +214,38 @@ window.onload = async function () {
     getBgImage(city);
   });
   changeColorInput.addEventListener('change', () => {
-    document.querySelector('body').setAttribute('style', `color:${changeColorInput.value} !important`);
+    document.querySelector('body').style.color = changeColorInput.value;
     languageBlock.style.color = changeColorInput.value;
     searchInput.style.color = changeColorInput.value;
   });
+
+  recognition.start();
+
+  microfonImg.addEventListener('click', () => {
+    isMicro = !isMicro;
+    if (isMicro) {
+      microfonImg.setAttribute('src', 'assets/micro_active.png');
+    } else {
+      microfonImg.setAttribute('src', 'assets/micrrofon.png');
+      recognition.abort();
+    }
+  });
+
+  recognition.addEventListener('result', (e) => {
+    const transcript = Array.from(e.results)
+      .map((result) => result[0])
+      .map((result) => result.transcript)
+      .join('');
+    if (isMicro) {
+      searchInput.value = transcript;
+    }
+  });
+
+  recognition.addEventListener('end', recognition.start);
+
+
   window.addEventListener('beforeunload', () => {
     localStorage.setItem('degreesFormat', degreesFormat);
     localStorage.setItem('language', language);
   });
-};
+}());

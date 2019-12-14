@@ -32,5 +32,4 @@ async function getCoordinates(city) {
 module.exports = {
   translateText,
   getCoordinates,
-  getWeatherByCity,
 };
