@@ -29,6 +29,7 @@ window.onload = async function () {
   const temperatureForToday = document.querySelector('.temperature p');
   const temperaturForTodayImg = document.querySelector('.temperature img');
   const weatherForTodayDescription = document.querySelector('.description');
+  const changeColorInput = document.querySelector('input[type="color"]');
   const weatherForTodayFeelsLikeTemp = document.querySelector('.feels-like-temp');
   const weatherForTodayWindSpeed = document.querySelector('.wind-speed');
   const celsiusFormat = document.getElementById('celsius');
@@ -201,6 +202,11 @@ window.onload = async function () {
   });
   refreshBgButton.addEventListener('click', () => { // creates new background image
     getBgImage(city);
+  });
+  changeColorInput.addEventListener('change', () => {
+    document.querySelector('body').setAttribute('style', `color:${changeColorInput.value} !important`);
+    languageBlock.style.color = changeColorInput.value;
+    searchInput.style.color = changeColorInput.value;
   });
   window.addEventListener('beforeunload', () => {
     localStorage.setItem('degreesFormat', degreesFormat);

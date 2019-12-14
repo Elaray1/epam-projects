@@ -22,6 +22,10 @@ export const controlBlock = `<div class="control-block">
           </label>
         </div>
       </div>
+      <label class="change-color">
+        <input type="color" value="#ffffff">
+        <div class="circle"></div>
+      </label>
     </div>
     <div class="control-block_search">
       <div class="search-input">

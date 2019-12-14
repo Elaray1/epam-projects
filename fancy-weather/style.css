@@ -143,13 +143,16 @@ body {
 	display: flex;
 	align-items: center;
 	padding: 15px 20px;
-	background: rgba(174, 181, 185, 0.5);
 	border-radius: 0 5px 5px 0;
 	cursor: pointer;
+	animation-name: rainbowcolor;
+	animation-duration: 20s;
+	animation-iteration-count: infinite;
 }
 
 .search-btn:active {
-	background: rgba(174, 181, 300, 0.5);
+	animation-name: activebtn;
+	animation-duration: 3s;
 }
 
 .control-block {
@@ -165,6 +168,9 @@ body {
 
 #refresh-bg {
 	cursor: pointer;
+	animation-name: coup;
+	animation-duration: 5s;
+	animation-iteration-count: infinite;
 }
 
 .weather-for-today h2 {
@@ -172,6 +178,60 @@ body {
 	font-size: 44px;
 	line-height: 55px;
 	text-transform: uppercase;
+}
+
+.change-color {
+  display: inline-block;
+  position: relative;
+  width: 30px;
+  height: 30px;
+	margin: auto 10px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+input[type="color"] {
+  -webkit-appearance: none;
+  border: none;
+  background: #fff;
+  width: 26px;
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  outline: none;
+  cursor: inherit;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+input[type=color]::-moz-focus-inner {
+  border: none;
+  padding: 0;
+  border-radius: 50%;
+}
+
+input[type=color]::-moz-color-swatch {
+  border: none;
+  border-radius: 50%;
+  height: 140px;
+}
+
+.circle {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  border-radius: 50%;
+  cursor: inherit;
 }
 
 .weather-for-today h4 {
@@ -183,6 +243,7 @@ body {
 .temperature {
 	display: flex;
 	margin-top: 30px;
+	animation: pulse 20s linear infinite;
 }
 
 .temperature p {
@@ -381,5 +442,94 @@ body {
 
 	.weather-for-3-days_element-2 {
 		margin: 0 20px;
+	}
+}
+
+
+@keyframes rainbowcolor {
+	from {
+		background: #DC143C;
+	}
+
+	14.3% {
+		background: #FF8C00;
+	}
+
+	28.6% {
+		background: #FFD700;
+	}
+
+	42.9% {
+		background: #00FF00;
+	}
+
+	57.2% {
+		background: #1E90FF;
+	}
+
+	71.5% {
+		background: #191970;
+	}
+
+	85.8% {
+		background: #800080;
+	}
+
+	to {
+		background: #FF00FF;
+	}
+}
+
+@keyframes activebtn {
+	from {
+		background:linear-gradient(bottom,#f58f99,#bf1e2e);
+		background:-webkit-linear-gradient(bottom, #f58f99 5%,#bf1e2e);
+		background:-o-linear-gradient(bottom,#f58f99,#bf1e2e);
+		background:-moz-linear-gradient(bottom,#f58f99,#bf1e2e);
+		background:-ms-linear-gradient(bottom,#f58f99,#bf1e2e);
+	}
+
+	50% {
+		background:linear-gradient(bottom,#f4da71,#cca509);
+	  background:-webkit-linear-gradient(bottom, #f4da71 5%,#cca509);
+	  background:-o-linear-gradient(bottom,#f4da71,#cca509);
+	  background:-moz-linear-gradient(bottom,#f4da71,#cca509);
+	  background:-ms-linear-gradient(bottom,#f4da71,#cca509);
+	}
+
+	to {
+		background:linear-gradient(bottom,#9ACD32,#228B22);
+		background:-webkit-linear-gradient(bottom, #9ACD32 5%,#228B22);
+		background:-o-linear-gradient(bottom,#9ACD32,#228B22);
+		background:-moz-linear-gradient(bottom,#9ACD32,#228B22);
+		background:-ms-linear-gradient(bottom,#9ACD32,#228B22);
+	}
+}
+
+@keyframes coup {
+	to {
+		transform: rotate(360deg);
+		transition: all 5s ease;
+	}
+}
+
+@keyframes pulse {
+	0% {
+		transform:scale(0.5);
+		-webkit-transform:scale(0.5);
+		-moz-transform:scale(0.5);
+		-o-transform:scale(0.5);
+	}
+	50% {
+		transform:scale(1);
+		-webkit-transform:scale(1);
+		-moz-transform:scale(1);
+		-o-transform:scale(1);
+	}
+	100%{
+		transform:scale(0.5);
+		-webkit-transform:scale(0.5);
+		-moz-transform:scale(0.5);
+		-o-transform:scale(0.5);
 	}
 }
