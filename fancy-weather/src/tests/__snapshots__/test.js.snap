@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Finding the correct city by coordinates of Incorrect city:  1`] = `-1`;
+
+exports[`Finding the correct city by coordinates of London:  1`] = `"-0.1277,51.5073"`;
+
+exports[`Finding the correct city by coordinates of Los Angeles:  1`] = `"-118.2445,34.0549"`;
+
+exports[`Finding the correct city by coordinates of Minsk:  1`] = `"27.5619,53.9023"`;
+
+exports[`Finding the correct city by coordinates of New York:  1`] = `"-73.9867,40.7306"`;
+
+exports[`Finding the correct city by coordinates of Tokyo:  1`] = `"139.759,35.6828"`;
+
+exports[`Translating from english to belarussian language:  1`] = `"Прывітанне, Карэн!"`;
+
+exports[`Translating from english to belarussian language:  2`] = `"Як ты?"`;
+
+exports[`Translating from english to russian language:  1`] = `"Привет, Карен!"`;
+
+exports[`Translating from english to russian language:  2`] = `"Как ты?"`;
