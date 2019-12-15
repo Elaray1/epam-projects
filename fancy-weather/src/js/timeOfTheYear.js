@@ -22,7 +22,8 @@ export const getYearTime = () => { // function that return time of the year (f.e
 
 export const getDayTime = (hours) => (hours < 6 ? 'night' : hours < 12 ? 'morning' : hours < 18 ? 'day' : hours < 23 ? 'evening' : 'night');
 
-export async function getCurrentTime(...args) { // function that returns current city time
+// function that returns current city time. If no arguments -> user's city, else entered city. args[0] -> language, args[1] -> city
+export async function getCurrentTime(...args) {
   let timeZone;
   if (args.length < 2) {
     date = new Date();

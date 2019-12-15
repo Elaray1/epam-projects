@@ -6,7 +6,8 @@ async function getUserCity() { // function that returns user's city.
   return data.city;
 }
 
-async function getUserTimeZone(...args) { // function that returns user's timeZone.
+// function that returns timeZone. If no arguments return users timezone, else -> returns timeZone of the city args[0] === city
+async function getUserTimeZone(...args) {
   if (!args.length) {
     const url = 'https://ipinfo.io/json?token=3ad064711c140a';
     const data = await fetch(url).then((res) => res.json());
@@ -17,7 +18,8 @@ async function getUserTimeZone(...args) { // function that returns user's timeZo
   return data.city.timezone;
 }
 
-async function getUserLocation(...args) { // function that returns user's location.
+// function that returns user's city and country if no arguments; 1 argument - city, 2 arguments - latitude and longitude
+async function getUserLocation(...args) {
   let url;
   if (!args.length) {
     url = 'https://ipinfo.io/json?token=3ad064711c140a';
@@ -33,7 +35,8 @@ async function getUserLocation(...args) { // function that returns user's locati
   return [data.city.name, data.city.country];
 }
 
-async function getWeatherByCity(...args) { // function that returns weather on 3 days using city name
+// returns weather on current and next 3 days. If no args - of user's city, else of enter city (args[0])
+async function getWeatherByCity(...args) {
   let city;
   if (!args.length) {
     city = await getUserCity();
@@ -45,7 +48,8 @@ async function getWeatherByCity(...args) { // function that returns weather on 3
   return data;
 }
 
-async function getCityTemperature(...args) { // function that returns temperature and temperature icons for 3 days
+// function that returns temperature and temperature icons for 3 days. If no args - of user's city, else of enter city (args[0])
+async function getCityTemperature(...args) {
   let city;
   if (!args.length) {
     city = await getUserCity();
@@ -61,7 +65,8 @@ async function getCityTemperature(...args) { // function that returns temperatur
   ];
 }
 
-async function getBgImage(...args) { // function that returns background image
+// function that returns background image. If no args - of user's city, else of enter city (args[0])
+async function getBgImage(...args) {
   const accessKey = '230f4057a5f3db6356e7ecc599dfea70f56ec7c5aa39f52fe4519034685dfd49';
   let city; let weather;
   if (!args.length) {
@@ -81,7 +86,8 @@ async function getBgImage(...args) { // function that returns background image
   body.style.backgroundImage = `url(${data.urls.full})`;
 }
 
-async function getWeatherDescriptionForToday(...args) { // function that return apparent temperature, summary, wind speed and humidity
+// function that return apparent temperature, summary, wind speed and humidity. If no args - of user's city, else of enter city (args[0])
+async function getWeatherDescriptionForToday(...args) {
   let city;
   if (!args.length) {
     city = await getUserCity();
@@ -97,6 +103,7 @@ async function getWeatherDescriptionForToday(...args) { // function that return 
   return [data.list[0].weather[0].description, Math.round(feelsLikeTemp), Math.round(windSpeed), humidity];
 }
 
+// convert degress into degrees and minutes
 const convertDDToDMS = (dd) => {
   const deg = dd | 0; // truncate dd to get degrees
   const frac = Math.abs(dd - deg); // get fractional part
@@ -104,6 +111,7 @@ const convertDDToDMS = (dd) => {
   return `${deg}°${min}'`;
 };
 
+// show city on the map using latitude and longitude. If no arguments - of user's city, else -> longitude === args[0], latitude === args[1]
 async function showOnTheMap(...args) {
   let lng; let lat;
   if (!args.length) {
@@ -124,6 +132,7 @@ async function showOnTheMap(...args) {
   return map;
 }
 
+// return latitude and longitude of the city
 async function getCoordinates(city) {
   const data = await getWeatherByCity(city);
   if (data.cod === '404' || data.cod === '400') {
@@ -134,6 +143,7 @@ async function getCoordinates(city) {
   return [lng, lat];
 }
 
+// translating text into the selected language
 async function translateText(text, lang) {
   const url = `https://translate.yandex.net/api/v1.5/tr.json/translate?lang=${lang}&text=${text}&key=trnsl.1.1.20191213T134804Z.f3c0207ae1bd61a1.4a6247447729b96142973c7e4dbea3a2683640a1`;
   const data = await fetch(url).then((res) => res.json());
