@@ -109,9 +109,9 @@ async function getWeatherDescriptionForToday(currentCity) {
 }
 
 // convert degrees into degrees and minutes
-const convertDDToDMS = (dd) => {
-  const deg = dd | 0; // truncate dd to get degrees
-  const frac = Math.abs(dd - deg); // get fractional part
+const convertDDToDMS = (initialDegrees) => {
+  const deg = initialDegrees | 0; // truncate dd to get degrees
+  const frac = Math.abs(initialDegrees - deg); // get fractional part
   const min = (frac * 60) | 0; // multiply fraction by 60 and truncate
   return `${deg}°${min}'`;
 };
