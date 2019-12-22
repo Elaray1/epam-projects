@@ -46,7 +46,8 @@ import { weatherArrayEng, weatherArrayRu, weatherArrayBe } from './weatherArrays
   let city = locationArray[0];
   let countryCode = locationArray[1];
 
-  const setTemperatureFor3Days = () => { // function that shows temperature on next 3 days
+  // function that shows temperature on next 3 days
+  const setTemperatureFor3Days = () => {
     for (let i = 1; i <= 3; i += 1) {
       const elem = document.querySelector(`.weather-for-3-days_element-${i}`);
       elem.firstElementChild.innerText = getFutureDate(i, language);
@@ -58,7 +59,8 @@ import { weatherArrayEng, weatherArrayRu, weatherArrayBe } from './weatherArrays
       elem.lastElementChild.lastElementChild.setAttribute('src', `http://openweathermap.org/img/wn/${currentTemperature[i][1]}@2x.png`);
     }
   };
-  const setweatherDescription = async (currentCity) => { // fucntion that shows weather description for today
+  // fucntion that shows weather description for today
+  const setweatherDescription = async (currentCity) => {
     weatherDescription = await getWeatherDescriptionForToday(currentCity);
     weatherForTodayDescription.innerText = weatherDescription[0];
     if (degreesFormat === 'celsius') {
@@ -69,7 +71,8 @@ import { weatherArrayEng, weatherArrayRu, weatherArrayBe } from './weatherArrays
     weatherForTodayWindSpeed.innerText = `${windText}: ${weatherDescription[2]} ${speed}`;
     weatherForTodayHumidity.innerText = `${humidityText}: ${weatherDescription[3]}%`;
   };
-  const switchSiteLanguage = async () => { // fucntion that change site language
+  // fucntion that change site language
+  const switchSiteLanguage = async () => {
     let weatherDescriptionVariable;
     switch (language) {
       case 'en':

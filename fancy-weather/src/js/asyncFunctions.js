@@ -1,6 +1,7 @@
 import { getYearTime, getDayTime } from './timeOfTheYear';
 
-async function getUserCity() { // function that returns user's city.
+// function that returns user's city.
+async function getUserCity() {
   const url = 'https://ipinfo.io/json?token=3ad064711c140a';
   const data = await fetch(url).then((res) => res.json());
   return data.city;

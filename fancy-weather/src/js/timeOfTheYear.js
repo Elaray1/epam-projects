@@ -1,7 +1,8 @@
 import { getUserTimeZone } from './asyncFunctions';
 
 let date = new Date();
-export const getYearTime = () => { // function that return time of the year (f.e. winter)
+// function that return time of the year (f.e. winter)
+export const getYearTime = () => {
   const timeOfTheYearObj = {
     1: 'winter',
     2: 'winter',
@@ -46,7 +47,8 @@ export async function getCurrentTime(...args) {
   return time;
 }
 
-export const getFutureDate = (days, lang) => { // function that returns future week day
+// function that returns future week day
+export const getFutureDate = (days, lang) => {
   let weekDays;
   switch (lang) {
     case 'en':
