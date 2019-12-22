@@ -4,17 +4,20 @@ import { getYearTime, getDayTime } from './timeOfTheYear';
 async function getUserCity() {
   const url = 'https://ipinfo.io/json?token=3ad064711c140a';
   const data = await fetch(url).then((res) => res.json());
+  if (!data) { // if data === null or undefined
+    throw new Error('Cant get users city');
+  }
   return data.city;
 }
 
 // function that returns timeZone. If no arguments return users timezone, else -> returns timeZone of the city args[0] === city
-async function getUserTimeZone(...args) {
-  if (!args.length) {
+async function getUserTimeZone(city) {
+  if (!arguments.length) {
     const url = 'https://ipinfo.io/json?token=3ad064711c140a';
     const data = await fetch(url).then((res) => res.json());
     return data.timezone;
   }
-  const url = `https://api.openweathermap.org/data/2.5/forecast?q=${args[0]}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
+  const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
   const data = await fetch(url).then((res) => res.json());
   return data.city.timezone;
 }
@@ -28,34 +31,31 @@ async function getUserLocation(...args) {
     return [data.city, data.country];
   }
   if (args.length === 1) {
-    url = `https://api.openweathermap.org/data/2.5/forecast?q=${args[0]}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
+    const city = args[0];
+    url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
   } else {
-    url = `https://api.openweathermap.org/data/2.5/forecast?lat=${args[1]}&lon=${args[0]}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
+    const longitude = args[0];
+    const latitude = args[1];
+    url = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
   }
   const data = await fetch(url).then((res) => res.json());
   return [data.city.name, data.city.country];
 }
 
-// returns weather on current and next 3 days. If no args - of user's city, else of enter city (args[0])
-async function getWeatherByCity(...args) {
-  let city;
-  if (!args.length) {
+// returns weather on current and next 3 days. If no args - of user's city, else of enter city
+async function getWeatherByCity(city) {
+  if (!arguments.length) {
     city = await getUserCity();
-  } else {
-    city = args[0];
   }
   const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
   const data = await fetch(url).then((res) => res.json());
   return data;
 }
 
-// function that returns temperature and temperature icons for 3 days. If no args - of user's city, else of enter city (args[0])
-async function getCityTemperature(...args) {
-  let city;
-  if (!args.length) {
+// function that returns temperature and temperature icons for 3 days. If no args - of user's city, else of enter city
+async function getCityTemperature(city) {
+  if (!arguments.length) {
     city = await getUserCity();
-  } else {
-    city = args[0];
   }
   const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
   const data = await fetch(url).then((res) => res.json());
@@ -66,15 +66,15 @@ async function getCityTemperature(...args) {
   ];
 }
 
-// function that returns background image. If no args - of user's city, else of enter city (args[0])
-async function getBgImage(...args) {
+// function that returns background image. If no args - of user's city, else of enter city
+async function getBgImage(currentCity) {
   const accessKey = '230f4057a5f3db6356e7ecc599dfea70f56ec7c5aa39f52fe4519034685dfd49';
-  let city; let weather;
-  if (!args.length) {
+  let weather;
+  if (!arguments.length) {
     city = await getUserCity();
     weather = await getWeatherByCity();
   } else {
-    city = await getWeatherByCity(args[0]);
+    city = await getWeatherByCity(currentCity);
     city = city.city.name;
     weather = await getWeatherByCity(city);
   }
@@ -87,13 +87,13 @@ async function getBgImage(...args) {
   body.style.backgroundImage = `url(${data.urls.full})`;
 }
 
-// function that return apparent temperature, summary, wind speed and humidity. If no args - of user's city, else of enter city (args[0])
-async function getWeatherDescriptionForToday(...args) {
+// function that return apparent temperature, summary, wind speed and humidity. If no args - of user's city, else of enter city
+async function getWeatherDescriptionForToday(currentCity) {
   let city;
-  if (!args.length) {
+  if (!arguments.length) {
     city = await getUserCity();
   } else {
-    city = args[0];
+    city = currentCity;
   }
   const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
   const data = await fetch(url).then((res) => res.json());
@@ -113,21 +113,17 @@ const convertDDToDMS = (dd) => {
 };
 
 // show city on the map using latitude and longitude. If no arguments - of user's city, else -> longitude === args[0], latitude === args[1]
-async function showOnTheMap(...args) {
-  let lng; let lat;
-  if (!args.length) {
+async function showOnTheMap(longitude, latitude) {
+  if (!arguments.length) {
     const data = await getWeatherByCity();
-    lng = data.city.coord.lon;
-    lat = data.city.coord.lat;
-  } else {
-    lng = args[0];
-    lat = args[1];
+    longitude = data.city.coord.lon;
+    latitude = data.city.coord.lat;
   }
   mapboxgl.accessToken = 'pk.eyJ1IjoiZWxhcmF5IiwiYSI6ImNrNDEyOWc2ZzA3ZGcza3BmeWNnc3U4cWIifQ.PyPYQwDUFrQnaFXpILz-_g';
   const map = new mapboxgl.Map({
     container: 'map', // container id
     style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
-    center: [lng, lat], // starting position [lng, lat]
+    center: [longitude, latitude], // starting position [lng, lat]
     zoom: 9, // starting zoom
   });
   return map;

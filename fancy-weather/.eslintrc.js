@@ -24,5 +24,6 @@ module.exports = {
       "no-bitwise": 0,
       "import/no-cycle": 0,
       "new-cap": 0,
+      "no-param-reassign": 0,
     }
 };

@@ -24,26 +24,26 @@ export const getYearTime = () => {
 export const getDayTime = (hours) => (hours < 6 ? 'night' : hours < 12 ? 'morning' : hours < 18 ? 'day' : hours < 23 ? 'evening' : 'night');
 
 // function that returns current city time. If no arguments -> user's city, else entered city. args[0] -> language, args[1] -> city
-export async function getCurrentTime(...args) {
+export async function getCurrentTime(language, city) {
   let timeZone;
-  if (args.length < 2) {
+  if (arguments.length < 2) {
     date = new Date();
     timeZone = await getUserTimeZone();
   } else {
-    timeZone = await getUserTimeZone(args[1]);
+    timeZone = await getUserTimeZone(city);
     if (timeZone === 10800) {
       date = new Date(Date.now());
     } else {
       date = new Date(Date.now() - 10800000 + timeZone * 1000);
     }
   }
-  if (args[0] === 'be') {
+  if (language === 'be') {
     const weekDays = ['Ндз', 'Пнд', 'Аўт', 'Срд', 'Чц', 'Птн', 'Сбт'];
     const monthArr = ['Стдудзеня', 'Лютага', 'Сакавіка', 'Красавіка', 'Мая', 'Чэрвеня', 'Ліпеня', 'Жниўня', 'Верасня', 'Кастрычніка', 'Лістапада', 'Снежня'];
     return `${weekDays[date.getDay()]}, ${date.getDate()} ${monthArr[date.getMonth()]}, ${date.getHours()}:${date.getMinutes()} `;
   }
   const options = { weekday: 'short', hour: '2-digit', minute: '2-digit', month: 'long', day: 'numeric', hour12: false };
-  const time = date.toLocaleString(args[0], options);
+  const time = date.toLocaleString(language, options);
   return time;
 }
 
