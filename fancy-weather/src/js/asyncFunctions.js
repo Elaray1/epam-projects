@@ -1,9 +1,12 @@
 import { getYearTime, getDayTime } from './timeOfTheYear';
 
+const getUserCityUrl = 'https://ipinfo.io/json?token=3ad064711c140a';
+const accessKey = '230f4057a5f3db6356e7ecc599dfea70f56ec7c5aa39f52fe4519034685dfd49';
+const mapAccessToken = 'pk.eyJ1IjoiZWxhcmF5IiwiYSI6ImNrNDEyOWc2ZzA3ZGcza3BmeWNnc3U4cWIifQ.PyPYQwDUFrQnaFXpILz-_g';
+
 // function that returns user's city.
 async function getUserCity() {
-  const url = 'https://ipinfo.io/json?token=3ad064711c140a';
-  const data = await fetch(url).then((res) => res.json());
+  const data = await fetch(getUserCityUrl).then((res) => res.json());
   if (!data) { // if data === null or undefined
     throw new Error('Cant get users city');
   }
@@ -13,8 +16,7 @@ async function getUserCity() {
 // function that returns timeZone. If no arguments return users timezone, else -> returns timeZone of the city args[0] === city
 async function getUserTimeZone(city) {
   if (!arguments.length) {
-    const url = 'https://ipinfo.io/json?token=3ad064711c140a';
-    const data = await fetch(url).then((res) => res.json());
+    const data = await fetch(getUserCityUrl).then((res) => res.json());
     return data.timezone;
   }
   const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
@@ -26,8 +28,7 @@ async function getUserTimeZone(city) {
 async function getUserLocation(...args) {
   let url;
   if (!args.length) {
-    url = 'https://ipinfo.io/json?token=3ad064711c140a';
-    const data = await fetch(url).then((res) => res.json());
+    const data = await fetch(getUserCityUrl).then((res) => res.json());
     return [data.city, data.country];
   }
   if (args.length === 1) {
@@ -68,7 +69,6 @@ async function getCityTemperature(city) {
 
 // function that returns background image. If no args - of user's city, else of enter city
 async function getBgImage(currentCity) {
-  const accessKey = '230f4057a5f3db6356e7ecc599dfea70f56ec7c5aa39f52fe4519034685dfd49';
   let weather;
   if (!arguments.length) {
     city = await getUserCity();
@@ -119,7 +119,7 @@ async function showOnTheMap(longitude, latitude) {
     longitude = data.city.coord.lon;
     latitude = data.city.coord.lat;
   }
-  mapboxgl.accessToken = 'pk.eyJ1IjoiZWxhcmF5IiwiYSI6ImNrNDEyOWc2ZzA3ZGcza3BmeWNnc3U4cWIifQ.PyPYQwDUFrQnaFXpILz-_g';
+  mapboxgl.accessToken = mapAccessToken;
   const map = new mapboxgl.Map({
     container: 'map', // container id
     style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
