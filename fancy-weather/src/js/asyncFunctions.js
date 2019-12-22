@@ -6,7 +6,7 @@ const mapAccessToken = 'pk.eyJ1IjoiZWxhcmF5IiwiYSI6ImNrNDEyOWc2ZzA3ZGcza3BmeWNnc
 
 // function that returns user's city.
 async function getUserCity() {
-  const data = await fetch(getUserCityUrl).then((res) => res.json());
+  const data = await fetch(getUserCityUrl).then((res) => res.json()).catch((error) => { throw new Error(error); });
   if (!data) { // if data === null or undefined
     throw new Error('Cant get users city');
   }
@@ -16,11 +16,11 @@ async function getUserCity() {
 // function that returns timeZone. If no arguments return users timezone, else -> returns timeZone of the city args[0] === city
 async function getUserTimeZone(city) {
   if (!arguments.length) {
-    const data = await fetch(getUserCityUrl).then((res) => res.json());
+    const data = await fetch(getUserCityUrl).then((res) => res.json()).catch((error) => { throw new Error(error); });
     return data.timezone;
   }
   const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
-  const data = await fetch(url).then((res) => res.json());
+  const data = await fetch(url).then((res) => res.json()).catch((error) => { throw new Error(error); });
   return data.city.timezone;
 }
 
@@ -28,7 +28,7 @@ async function getUserTimeZone(city) {
 async function getUserLocation(...args) {
   let url;
   if (!args.length) {
-    const data = await fetch(getUserCityUrl).then((res) => res.json());
+    const data = await fetch(getUserCityUrl).then((res) => res.json()).catch((error) => { throw new Error(error); });
     return [data.city, data.country];
   }
   if (args.length === 1) {
@@ -39,7 +39,10 @@ async function getUserLocation(...args) {
     const latitude = args[1];
     url = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
   }
-  const data = await fetch(url).then((res) => res.json());
+  const data = await fetch(url).then((res) => res.json()).catch((error) => { throw new Error(error); });
+  if (!data) {
+    throw new Error('Cant get county and city using this data');
+  }
   return [data.city.name, data.city.country];
 }
 
@@ -49,7 +52,7 @@ async function getWeatherByCity(city) {
     city = await getUserCity();
   }
   const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
-  const data = await fetch(url).then((res) => res.json());
+  const data = await fetch(url).then((res) => res.json()).catch((error) => { throw new Error(error); });
   return data;
 }
 
@@ -59,7 +62,7 @@ async function getCityTemperature(city) {
     city = await getUserCity();
   }
   const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
-  const data = await fetch(url).then((res) => res.json());
+  const data = await fetch(url).then((res) => res.json()).catch((error) => { throw new Error(error); });
   return [[Math.round(data.list[0].main.temp), data.list[0].weather[0].icon],
     [Math.round(data.list[8].main.temp), data.list[8].weather[0].icon],
     [Math.round(data.list[16].main.temp), data.list[16].weather[0].icon],
@@ -69,6 +72,7 @@ async function getCityTemperature(city) {
 
 // function that returns background image. If no args - of user's city, else of enter city
 async function getBgImage(currentCity) {
+  let city;
   let weather;
   if (!arguments.length) {
     city = await getUserCity();
@@ -82,7 +86,7 @@ async function getBgImage(currentCity) {
   const yearTime = await getYearTime();
   const dayTime = getDayTime(new Date().getHours());
   const url = `https://api.unsplash.com/photos/random?query=${yearTime},${weather},${dayTime},${city}&client_id=${accessKey}`;
-  const data = await fetch(url).then((res) => res.json());
+  const data = await fetch(url).then((res) => res.json()).catch((error) => { throw new Error(error); });
   const body = document.querySelector('body');
   body.style.backgroundImage = `url(${data.urls.full})`;
 }
@@ -96,7 +100,7 @@ async function getWeatherDescriptionForToday(currentCity) {
     city = currentCity;
   }
   const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
-  const data = await fetch(url).then((res) => res.json());
+  const data = await fetch(url).then((res) => res.json()).catch((error) => { throw new Error(error); });
   const celsiusTemp = data.list[0].main.temp;
   const { humidity } = data.list[0].main;
   const windSpeed = data.list[0].wind.speed;
@@ -104,7 +108,7 @@ async function getWeatherDescriptionForToday(currentCity) {
   return [data.list[0].weather[0].description, Math.round(feelsLikeTemp), Math.round(windSpeed), humidity];
 }
 
-// convert degress into degrees and minutes
+// convert degrees into degrees and minutes
 const convertDDToDMS = (dd) => {
   const deg = dd | 0; // truncate dd to get degrees
   const frac = Math.abs(dd - deg); // get fractional part
@@ -143,7 +147,7 @@ async function getCoordinates(city) {
 // translating text into the selected language
 async function translateText(text, lang) {
   const url = `https://translate.yandex.net/api/v1.5/tr.json/translate?lang=${lang}&text=${text}&key=trnsl.1.1.20191213T134804Z.f3c0207ae1bd61a1.4a6247447729b96142973c7e4dbea3a2683640a1`;
-  const data = await fetch(url).then((res) => res.json());
+  const data = await fetch(url).then((res) => res.json()).catch((error) => { throw new Error(error); });
   return data.text[0];
 }
 
