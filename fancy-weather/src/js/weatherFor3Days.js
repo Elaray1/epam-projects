@@ -1,19 +1,19 @@
-export const weatherFor3DaysBlock = `<div class="weather-for-3-days">
-      <div class="weather-for-3-days_element weather-for-3-days_element-1">
+export const nextThreeDaysWeather = `<div class="next-three-days-weather">
+      <div class="next-three-days-weather_element next-three-days-weather_item-1">
         <p></p>
         <div class="temperature-next-days">
           <p></p>
           <img src="" alt="">
         </div>
       </div>
-      <div class="weather-for-3-days_element weather-for-3-days_element-2">
+      <div class="next-three-days-weather_element next-three-days-weather_item-2">
         <p></p>
         <div class="temperature-next-days">
           <p></p>
           <img src="" alt="">
         </div>
       </div>
-      <div class="weather-for-3-days_element weather-for-3-days_element-3">
+      <div class="next-three-days-weather_element next-three-days-weather_item-3">
         <p></p>
         <div class="temperature-next-days">
           <p></p>

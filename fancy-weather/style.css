@@ -266,13 +266,13 @@ input[type=color]::-moz-color-swatch {
 	text-transform: uppercase;
 }
 
-.weather-for-3-days {
+.next-three-days-weather {
 	display: flex;
 	justify-content: space-around;
 	flex-wrap: wrap;
 }
 
-.weather-for-3-days_element p {
+.next-three-days-weather_item p {
 	font-weight: bold;
 	font-size: 22px;
 	line-height: 30px;
@@ -346,7 +346,7 @@ input[type=color]::-moz-color-swatch {
 		justify-content: flex-start;
 	}
 
-	.weather-for-3-days_element p {
+	.next-three-days-weather_item p {
 		font-size: 17px;
 	}
 
@@ -440,7 +440,7 @@ input[type=color]::-moz-color-swatch {
 		font-size: 15px;
 	}
 
-	.weather-for-3-days_element-2 {
+	.next-three-days-weather_item-2 {
 		margin: 0 20px;
 	}
 }

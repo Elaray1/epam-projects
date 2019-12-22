@@ -1,4 +1,4 @@
-export const weatherForTodayBlock = `<div class="weather-for-today">
+export const weatherForToday = `<div class="weather-for-today">
           <h2></h2>
           <h4></h4>
           <div class="weather-for-today_weather-description-block">

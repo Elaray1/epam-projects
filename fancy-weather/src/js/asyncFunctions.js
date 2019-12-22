@@ -3,6 +3,8 @@ import { getYearTime, getDayTime } from './timeOfTheYear';
 const getUserCityUrl = 'https://ipinfo.io/json?token=3ad064711c140a';
 const accessKey = '230f4057a5f3db6356e7ecc599dfea70f56ec7c5aa39f52fe4519034685dfd49';
 const mapAccessToken = 'pk.eyJ1IjoiZWxhcmF5IiwiYSI6ImNrNDEyOWc2ZzA3ZGcza3BmeWNnc3U4cWIifQ.PyPYQwDUFrQnaFXpILz-_g';
+const badRequest = '400';
+const notFound = '404';
 
 // function that returns user's city.
 async function getUserCity() {
@@ -120,6 +122,9 @@ const convertDDToDMS = (initialDegrees) => {
 async function showOnTheMap(longitude, latitude) {
   if (!arguments.length) {
     const data = await getWeatherByCity();
+    if (!data) {
+      throw new Error('Cant get weather by users city');
+    }
     longitude = data.city.coord.lon;
     latitude = data.city.coord.lat;
   }
@@ -136,7 +141,7 @@ async function showOnTheMap(longitude, latitude) {
 // return latitude and longitude of the city
 async function getCoordinates(city) {
   const data = await getWeatherByCity(city);
-  if (data.cod === '404' || data.cod === '400') {
+  if (data.cod === notFound || data.cod === badRequest) {
     return -1;
   }
   const lng = data.city.coord.lon;
@@ -151,4 +156,16 @@ async function translateText(text, lang) {
   return data.text[0];
 }
 
-export { getUserLocation, getWeatherByCity, getBgImage, getUserCity, getUserTimeZone, getCityTemperature, getWeatherDescriptionForToday, showOnTheMap, getCoordinates, convertDDToDMS, translateText };
+export {
+  getUserLocation,
+  getWeatherByCity,
+  getBgImage,
+  getUserCity,
+  getUserTimeZone,
+  getCityTemperature,
+  getWeatherDescriptionForToday,
+  showOnTheMap,
+  getCoordinates,
+  convertDDToDMS,
+  translateText,
+};

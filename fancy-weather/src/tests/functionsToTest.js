@@ -1,5 +1,8 @@
 const fetch = require('node-fetch');
 
+const badRequest = '400';
+const notFound = '404';
+
 async function translateText(text, lang) {
   const url = `https://translate.yandex.net/api/v1.5/tr.json/translate?lang=${lang}&text=${text}&key=trnsl.1.1.20191213T134804Z.f3c0207ae1bd61a1.4a6247447729b96142973c7e4dbea3a2683640a1`;
   const data = await fetch(url).then((res) => res.json());
@@ -20,7 +23,7 @@ async function getWeatherByCity(...args) { // function that returns weather on 3
 
 async function getCoordinates(city) {
   const data = await getWeatherByCity(city);
-  if (data.cod === '404' || data.cod === '400') {
+  if (data.cod === notFound || data.cod === badRequest) {
     return -1;
   }
   const lng = data.city.coord.lon;

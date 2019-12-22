@@ -2,21 +2,21 @@
 import { getUserCity, getUserLocation, getBgImage, getCityTemperature, getWeatherDescriptionForToday, showOnTheMap, getCoordinates, convertDDToDMS, translateText } from './asyncFunctions';
 import { getCurrentTime, getFutureDate } from './timeOfTheYear';
 import { controlBlock } from './controlBlock';
-import { weatherForTodayBlock } from './weatherForToday';
+import { weatherForToday } from './weatherForToday';
 import { fullCountryNames } from './fullCountryNames';
-import { weatherFor3DaysBlock } from './weatherFor3Days';
+import { nextThreeDaysWeather } from './weatherFor3Days';
 import { mapBlock } from './map';
 import { weatherArrayEng, weatherArrayRu, weatherArrayBe } from './weatherArrays';
 
 (async function () {
   const contentWarapper = document.querySelector('.content-wrapper');
-  const htmlContent = `${controlBlock}<div class="weather-and-map"><div class="weather-for-4-days">${weatherForTodayBlock}${weatherFor3DaysBlock}</div>${mapBlock}</div>`;
+  const htmlContent = `${controlBlock}<div class="weather-and-map"><div class="weather-for-4-days">${weatherForToday}${nextThreeDaysWeather}</div>${mapBlock}</div>`;
   contentWarapper.insertAdjacentHTML('afterbegin', htmlContent);
   const refreshBgButton = document.getElementById('refresh-bg');
   const locationStr = document.querySelector('.weather-for-today h2');
   const currentTimeStr = document.querySelector('.weather-for-today h4');
   const temperatureForToday = document.querySelector('.temperature p');
-  const temperaturForTodayImg = document.querySelector('.temperature img');
+  const dailyTemperatureImg = document.querySelector('.temperature img');
   const weatherForTodayDescription = document.querySelector('.description');
   const changeColorInput = document.querySelector('input[type="color"]');
   const weatherForTodayFeelsLikeTemp = document.querySelector('.feels-like-temp');
@@ -28,6 +28,7 @@ import { weatherArrayEng, weatherArrayRu, weatherArrayBe } from './weatherArrays
   const languageBlock = document.querySelector('select');
   const microfonImg = document.getElementById('microfon-img');
   const recognition = new webkitSpeechRecognition();
+  const userCity = await getUserCity();
 
   let language; // current language on site
   let degreesFormat; // current degrees format on site
@@ -40,7 +41,8 @@ import { weatherArrayEng, weatherArrayRu, weatherArrayBe } from './weatherArrays
   let longitude;
   let latitude;
   let weatherDescription;
-  let [lng, lat] = await getCoordinates(await getUserCity()); // getting current longitude and latitude by user current city
+
+  let [lng, lat] = await getCoordinates(userCity); // getting current longitude and latitude by user current city
   let currentTemperature = await getCityTemperature(); // array that contains temperature and icons on current and next 3 days
   let locationArray = await getUserLocation(); // contains array with city and country
   let city = locationArray[0];
@@ -49,7 +51,7 @@ import { weatherArrayEng, weatherArrayRu, weatherArrayBe } from './weatherArrays
   // function that shows temperature on next 3 days
   const setTemperatureFor3Days = () => {
     for (let i = 1; i <= 3; i += 1) {
-      const elem = document.querySelector(`.weather-for-3-days_element-${i}`);
+      const elem = document.querySelector(`.next-three-days-weather_item-${i}`);
       elem.firstElementChild.innerText = getFutureDate(i, language);
       if (degreesFormat === 'celsius') {
         elem.lastElementChild.firstElementChild.innerText = `${currentTemperature[i][0]}°`;
@@ -115,7 +117,7 @@ import { weatherArrayEng, weatherArrayRu, weatherArrayBe } from './weatherArrays
     weatherForTodayWindSpeed.innerText = `${windText}: ${weatherDescription[2]} ${speed}`;
     weatherForTodayHumidity.innerText = `${humidityText}: ${weatherDescription[3]}%`;
     for (let i = 1; i <= 3; i += 1) {
-      const elem = document.querySelector(`.weather-for-3-days_element-${i}`);
+      const elem = document.querySelector(`.next-three-days-weather_item-${i}`);
       elem.firstElementChild.innerText = getFutureDate(i, language);
     }
     document.querySelector('.lon').innerText = `${longitude}: ${convertDDToDMS(lng)}`;
@@ -148,7 +150,7 @@ import { weatherArrayEng, weatherArrayRu, weatherArrayBe } from './weatherArrays
   currentTimeStr.innerText = await getCurrentTime(language);
   locationStr.innerText = `${city}, ${fullCountryNames[countryCode]}`; // set user's country and city
   switchSiteLanguage();
-  temperaturForTodayImg.setAttribute('src', `http://openweathermap.org/img/wn/${currentTemperature[0][1]}@2x.png`);
+  dailyTemperatureImg.setAttribute('src', `http://openweathermap.org/img/wn/${currentTemperature[0][1]}@2x.png`);
   showOnTheMap();
   document.querySelector('.lon').innerText = `${longitude}: ${convertDDToDMS(lng)}`;
   document.querySelector('.lat').innerText = `${latitude}: ${convertDDToDMS(lat)}`;
@@ -183,7 +185,7 @@ import { weatherArrayEng, weatherArrayRu, weatherArrayBe } from './weatherArrays
     } else {
       temperatureForToday.innerText = `${Math.round((9 / 5) * currentTemperature[0][0] + 32)}°`;
     }
-    temperaturForTodayImg.setAttribute('src', `http://openweathermap.org/img/wn/${currentTemperature[0][1]}@2x.png`);
+    dailyTemperatureImg.setAttribute('src', `http://openweathermap.org/img/wn/${currentTemperature[0][1]}@2x.png`);
     await setweatherDescription(city);
     setTemperatureFor3Days();
     switchSiteLanguage();
@@ -194,7 +196,7 @@ import { weatherArrayEng, weatherArrayRu, weatherArrayBe } from './weatherArrays
       degreesFormat = 'celsius';
       temperatureForToday.innerText = `${Math.round((5 / 9) * (temperatureForToday.innerText.substr(0, temperatureForToday.innerText.length - 1) - 32))}°`;
       for (let i = 1; i <= 3; i += 1) {
-        const elem = document.querySelector(`.weather-for-3-days_element-${i}`);
+        const elem = document.querySelector(`.next-three-days-weather_item-${i}`);
         elem.lastElementChild.firstElementChild.innerText = `${Math.round((5 / 9) * (elem.lastElementChild.firstElementChild.innerText.substr(0, elem.lastElementChild.firstElementChild.innerText.length - 1) - 32))}°`;
       }
       weatherForTodayFeelsLikeTemp.innerText = `${feelsLikeText}: ${weatherDescription[1]}°`;
@@ -202,7 +204,7 @@ import { weatherArrayEng, weatherArrayRu, weatherArrayBe } from './weatherArrays
       degreesFormat = 'fahrenheit';
       temperatureForToday.innerText = `${Math.round((9 / 5) * temperatureForToday.innerText.substr(0, temperatureForToday.innerText.length - 1) + 32)}°`;
       for (let i = 1; i <= 3; i += 1) {
-        const elem = document.querySelector(`.weather-for-3-days_element-${i}`);
+        const elem = document.querySelector(`.next-three-days-weather_item-${i}`);
         elem.lastElementChild.firstElementChild.innerText = `${Math.round((9 / 5) * elem.lastElementChild.firstElementChild.innerText.substr(0, elem.lastElementChild.firstElementChild.innerText.length - 1) + 32)}°`;
       }
       weatherForTodayFeelsLikeTemp.innerText = `${feelsLikeText}: ${Math.round((9 / 5) * weatherDescription[1] + 32)}°`;
@@ -236,10 +238,7 @@ import { weatherArrayEng, weatherArrayRu, weatherArrayBe } from './weatherArrays
   });
 
   recognition.addEventListener('result', (e) => {
-    const transcript = Array.from(e.results)
-      .map((result) => result[0])
-      .map((result) => result.transcript)
-      .join('');
+    const transcript = Array.from(e.results[0][0].transcript);
     if (isMicro) {
       searchInput.value = transcript;
     }

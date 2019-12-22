@@ -5,16 +5,16 @@ const getCoordinates = functionsArr.getCoordinates;
 
 describe('Translating', () => {
   test('from english to russian language: ', async () => {
-    expect(await translateText('Hello, Karen!', 'ru')).toBe('Привет, Карен!');
-    expect(await translateText('Hello, Karen!', 'ru')).toMatchSnapshot();
+    expect(await translateText('Hello, cat!', 'ru')).toBe('Привет, кот!');
+    expect(await translateText('Hello, cat!', 'ru')).toMatchSnapshot();
   });
   test('from english to russian language: ', async () => {
     expect(await translateText('How are you?', 'ru')).toBe('Как ты?');
     expect(await translateText('How are you?', 'ru')).toMatchSnapshot();
   });
   test('from english to belarussian language: ', async () => {
-    expect(await translateText('Hello, Karen!', 'be')).toBe('Прывітанне, Карэн!');
-    expect(await translateText('Hello, Karen!', 'be')).toMatchSnapshot();
+    expect(await translateText('Hello, cat!', 'be')).toBe('Прывітанне, кот!');
+    expect(await translateText('Hello, cat!', 'be')).toMatchSnapshot();
   });
   test('from english to belarussian language: ', async () => {
     expect(await translateText('How are you?', 'be')).toBe('Як ты?');
