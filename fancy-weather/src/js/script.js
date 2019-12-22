@@ -225,7 +225,7 @@ import { weatherArrayEng, weatherArrayRu, weatherArrayBe } from './weatherArrays
     searchInput.style.color = changeColorInput.value;
   });
 
-  // recognition.start();
+  recognition.start();
   microfonImg.addEventListener('click', () => { // on/off microfon
     isMicro = !isMicro;
     if (isMicro) {
