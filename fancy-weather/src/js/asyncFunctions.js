@@ -89,6 +89,7 @@ async function getBgImage(currentCity) {
     city = city.city.name;
     weather = await getWeatherByCity(city);
   }
+  if (!_.get(weather, 'list[0].weather[0].main', '')) throw new Error('Cant get weather!');
   weather = weather.list[0].weather[0].main;
   const yearTime = await getYearTime();
   const dayTime = getDayTime(new Date().getHours());
