@@ -1,5 +1,7 @@
 import { getYearTime, getDayTime } from './timeOfTheYear';
 
+const _ = require('lodash');
+
 const getUserCityUrl = 'https://ipinfo.io/json?token=3ad064711c140a';
 const accessKey = '230f4057a5f3db6356e7ecc599dfea70f56ec7c5aa39f52fe4519034685dfd49';
 const mapAccessToken = 'pk.eyJ1IjoiZWxhcmF5IiwiYSI6ImNrNDEyOWc2ZzA3ZGcza3BmeWNnc3U4cWIifQ.PyPYQwDUFrQnaFXpILz-_g';
@@ -23,6 +25,7 @@ async function getUserTimeZone(city) {
   }
   const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
   const data = await fetch(url).then((res) => res.json()).catch((error) => { throw new Error(error); });
+  if (!_.get(data, 'city.timezone', '')) throw new Error('Cant get timezone!');
   return data.city.timezone;
 }
 
@@ -45,6 +48,7 @@ async function getUserLocation(...args) {
   if (!data) {
     throw new Error('Cant get county and city using this data');
   }
+  if (!_.get(data, 'city.name', '') || !_.get(data, 'city.country', '')) throw new Error('Cant get city or country name!');
   return [data.city.name, data.city.country];
 }
 
@@ -65,6 +69,7 @@ async function getCityTemperature(city) {
   }
   const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
   const data = await fetch(url).then((res) => res.json()).catch((error) => { throw new Error(error); });
+  if (!_.get(data, 'list[0].main.temp', '') || !_.get(data, 'list[0].weather[0].icon', '')) throw new Error('Cant get weather or weather icon!');
   return [[Math.round(data.list[0].main.temp), data.list[0].weather[0].icon],
     [Math.round(data.list[8].main.temp), data.list[8].weather[0].icon],
     [Math.round(data.list[16].main.temp), data.list[16].weather[0].icon],
@@ -103,6 +108,8 @@ async function getWeatherDescriptionForToday(currentCity) {
   }
   const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
   const data = await fetch(url).then((res) => res.json()).catch((error) => { throw new Error(error); });
+  if (!_.get(data, 'list[0].main.temp', '') || !_.get(data, 'list[0].main', '')
+   || !_.get(data, 'list[0].wind.speed', '') || !_.get(data, 'list[0].weather[0].description', '')) throw new Error('Cant get weather description!');
   const celsiusTemp = data.list[0].main.temp;
   const { humidity } = data.list[0].main;
   const windSpeed = data.list[0].wind.speed;
@@ -125,8 +132,9 @@ async function showOnTheMap(longitude, latitude) {
     if (!data) {
       throw new Error('Cant get weather by users city');
     }
-    longitude = data.city.coord.lon;
-    latitude = data.city.coord.lat;
+    longitude = _.get(data, 'city.coord.lon', '');
+    latitude = _.get(data, 'city.coord.lat', '');
+    if (!longitude || !latitude) throw new Error('Cant get coordinates of the city!');
   }
   mapboxgl.accessToken = mapAccessToken;
   const map = new mapboxgl.Map({
@@ -144,9 +152,10 @@ async function getCoordinates(city) {
   if (data.cod === notFound || data.cod === badRequest) {
     return -1;
   }
-  const lng = data.city.coord.lon;
-  const lat = data.city.coord.lat;
-  return [lng, lat];
+  const longitude = _.get(data, 'city.coord.lon', '');
+  const latitude = _.get(data, 'city.coord.lat', '');
+  if (!longitude || !latitude) throw new Error('Cant get coordinates of the city!');
+  return [longitude, latitude];
 }
 
 // translating text into the selected language

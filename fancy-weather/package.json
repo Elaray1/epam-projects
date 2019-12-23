@@ -20,6 +20,7 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
+    "lodash": "^4.17.15",
     "node-fetch": "^2.6.0"
   }
 }
