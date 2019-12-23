@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const _ = require('lodash');
 
 const badRequest = '400';
 const notFound = '404';
@@ -26,9 +27,10 @@ async function getCoordinates(city) {
   if (data.cod === notFound || data.cod === badRequest) {
     return -1;
   }
-  const lng = data.city.coord.lon;
-  const lat = data.city.coord.lat;
-  return [lng, lat].toString();
+  const longitude = _.get(data, 'city.coord.lon', '');
+  const latitude = _.get(data, 'city.coord.lat', '');
+  if (!longitude || !latitude) throw new Error('Cant get coordinates of the city!');
+  return [longitude, latitude].toString();
 }
 
 
