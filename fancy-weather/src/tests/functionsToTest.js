@@ -4,8 +4,12 @@ const get = require('lodash/get');
 const badRequest = '400';
 const notFound = '404';
 
+const translateTextUrl = (lang, text) => `https://translate.yandex.net/api/v1.5/tr.json/translate?lang=${lang}&text=${text}&key=trnsl.1.1.20191213T134804Z.f3c0207ae1bd61a1.4a6247447729b96142973c7e4dbea3a2683640a1`;
+const cityUrl = (city) => `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
+
+
 async function translateText(text, lang) {
-  const url = `https://translate.yandex.net/api/v1.5/tr.json/translate?lang=${lang}&text=${text}&key=trnsl.1.1.20191213T134804Z.f3c0207ae1bd61a1.4a6247447729b96142973c7e4dbea3a2683640a1`;
+  const url = translateTextUrl(lang, text);
   const data = await fetch(url).then((res) => res.json());
   return data.text[0];
 }
@@ -17,7 +21,7 @@ async function getWeatherByCity() { // function that returns weather on 3 days u
   } else {
     city = arguments[0];
   }
-  const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
+  const url = cityUrl(city);
   const data = await fetch(url).then((res) => res.json());
   return data;
 }
