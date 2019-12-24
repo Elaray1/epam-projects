@@ -32,19 +32,27 @@ async function getUserTimeZone(city) {
 // function that returns user's city and country if no arguments; 1 argument - city, 2 arguments - latitude and longitude
 async function getUserLocation(...args) {
   let url;
-  if (!args.length) {
-    const data = await fetch(getUserCityUrl).then((res) => res.json()).catch((error) => { throw new Error(error); });
-    return [data.city, data.country];
+  let data;
+  let city;
+  let latitude;
+  let longitude;
+  switch (args.length) {
+    case 0:
+      data = await fetch(getUserCityUrl).then((res) => res.json()).catch((error) => { throw new Error(error); });
+      return [data.city, data.country];
+    case 1:
+      city = args[0];
+      url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
+      break;
+    case 2:
+      longitude = args[0];
+      latitude = args[1];
+      url = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
+      break;
+    default:
+      throw new Error('Incorrect arguments!');
   }
-  if (args.length === 1) {
-    const city = args[0];
-    url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
-  } else {
-    const longitude = args[0];
-    const latitude = args[1];
-    url = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
-  }
-  const data = await fetch(url).then((res) => res.json()).catch((error) => { throw new Error(error); });
+  data = await fetch(url).then((res) => res.json()).catch((error) => { throw new Error(error); });
   if (!data) {
     throw new Error('Cant get county and city using this data');
   }
