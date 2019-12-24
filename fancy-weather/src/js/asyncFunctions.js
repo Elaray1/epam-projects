@@ -30,13 +30,13 @@ async function getUserTimeZone(city) {
 }
 
 // function that returns user's city and country if no arguments; 1 argument - city, 2 arguments - latitude and longitude
-async function getUserLocation(...args) {
+async function getUserLocation() {
   let url;
   let data;
   let city;
   let latitude;
   let longitude;
-  switch (args.length) {
+  switch (arguments.length) {
     case 0:
       data = await fetch(getUserCityUrl).then((res) => res.json()).catch((error) => { throw new Error(error); });
       return [data.city, data.country];
