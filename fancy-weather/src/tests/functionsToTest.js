@@ -10,12 +10,12 @@ async function translateText(text, lang) {
   return data.text[0];
 }
 
-async function getWeatherByCity(...args) { // function that returns weather on 3 days using city name
+async function getWeatherByCity() { // function that returns weather on 3 days using city name
   let city;
-  if (!args.length) {
+  if (!arguments.length) {
     city = await getUserCity();
   } else {
-    city = args[0];
+    city = arguments[0];
   }
   const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=332b80fd8cd78e930da57a87c99f70ec`;
   const data = await fetch(url).then((res) => res.json());
