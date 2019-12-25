@@ -26,5 +26,6 @@ module.exports = {
       "new-cap": 0,
       "no-param-reassign": 0,
       "prefer-rest-params": 0,
+      "no-alert": 0,
     }
 };

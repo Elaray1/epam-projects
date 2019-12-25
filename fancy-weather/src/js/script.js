@@ -165,7 +165,8 @@ import { weatherArrayEng, weatherArrayRu, weatherArrayBe } from './weatherArrays
       recognition.stop();
     }
     if (await getCoordinates(searchInput.value) === -1) {
-      searchInput.value = language === 'en' ? 'Incorrect city name' : language === 'ru' ? 'Неправильное название города' : 'Няправільная назва горада';
+      const cityMessageError = language === 'en' ? 'Incorrect city name' : language === 'ru' ? 'Неправильное название города' : 'Няправільная назва горада';
+      alert(cityMessageError);
       return;
     }
     [lng, lat] = await getCoordinates(searchInput.value);

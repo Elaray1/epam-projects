@@ -83,10 +83,14 @@ async function getCityTemperature(city) {
   const url = cityUrl(city);
   const data = await fetch(url).then((res) => res.json()).catch((error) => { throw new Error(error); });
   if (!get(data, 'list[0].main.temp', '') || !get(data, 'list[0].weather[0].icon', '')) throw new Error('Cant get weather or weather icon!');
-  return [[Math.round(data.list[0].main.temp), data.list[0].weather[0].icon],
-    [Math.round(data.list[8].main.temp), data.list[8].weather[0].icon],
-    [Math.round(data.list[16].main.temp), data.list[16].weather[0].icon],
-    [Math.round(data.list[24].main.temp), data.list[24].weather[0].icon],
+  const listFirstItem = get(data, 'list[0]', {});
+  const listEighthItem = get(data, 'list[8]', {});
+  const listSixteenthItem = get(data, 'list[16]', {});
+  const listTwentyFourthItem = get(data, 'list[24]', {});
+  return [[Math.round(listFirstItem.main.temp), listFirstItem.weather[0].icon],
+    [Math.round(listEighthItem.main.temp), listEighthItem.weather[0].icon],
+    [Math.round(listSixteenthItem.main.temp), listSixteenthItem.weather[0].icon],
+    [Math.round(listTwentyFourthItem.main.temp), listTwentyFourthItem.weather[0].icon],
   ];
 }
 
@@ -103,7 +107,8 @@ async function getBgImage(currentCity) {
     weather = await getWeatherByCity(city);
   }
   if (!get(weather, 'list[0].weather[0].main', '')) throw new Error('Cant get weather!');
-  weather = weather.list[0].weather[0].main;
+  const listFirstItem = get(weather, 'list[0]', {});
+  weather = listFirstItem.weather[0].main;
   const yearTime = await getYearTime();
   const dayTime = getDayTime(new Date().getHours());
   const url = bgImageUrl(yearTime, weather, dayTime, city);
@@ -124,11 +129,12 @@ async function getWeatherDescriptionForToday(currentCity) {
   const data = await fetch(url).then((res) => res.json()).catch((error) => { throw new Error(error); });
   if (!get(data, 'list[0].main.temp', '') || !get(data, 'list[0].main', '')
    || !get(data, 'list[0].wind.speed', '') || !get(data, 'list[0].weather[0].description', '')) throw new Error('Cant get weather description!');
-  const celsiusTemp = data.list[0].main.temp;
-  const { humidity } = data.list[0].main;
-  const windSpeed = data.list[0].wind.speed;
+  const listFirstItem = get(data, 'list[0]', {});
+  const celsiusTemp = listFirstItem.main.temp;
+  const { humidity } = listFirstItem.main;
+  const windSpeed = listFirstItem.wind.speed;
   const feelsLikeTemp = celsiusTemp - 0.4 * (celsiusTemp - 10) * (1 - humidity / 100);
-  return [data.list[0].weather[0].description, Math.round(feelsLikeTemp), Math.round(windSpeed), humidity];
+  return [listFirstItem.weather[0].description, Math.round(feelsLikeTemp), Math.round(windSpeed), humidity];
 }
 
 // convert degrees into degrees and minutes
