@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+
+    <header>
+      <nav>
+        <img src="assets\menu_button.png" alt="menu" width="18" height="12">
+        <h1>CodeJam - Pallete</h1>
+      </nav>
+      <img src="assets\Shape.png" width="4" height="16">
+    </header>
+
+    <main>
+      <div class="tools">
+
+        <ul id="tools-list">
+          <li id="paint_bucket"><img src="assets\paint_bucket.png" alt="" width="20" height="18"><p>Paint bucket</p></li>
+          <li id="choose_color"><img src="assets\choose_color.png" alt="" width="20" height="20"><p>Choose color</p></li>
+          <li id="pencil"><img src="assets\pencil.png" alt="" width="20" height="20"><p>Pencil</p></li>
+          <li id="eraser"><img src="assets\eraser.png" alt="" width="20" height="20"><p>Eraser</p></li>
+          <li></li>
+        </ul>
+
+        <ul id="color-list">
+          <label for="select_color"><li><input id="select_color" type="color" value="#FF0000"><p>Select color</p></li></label>
+          <div class="border"></div>
+          <li id="current_color">
+          <div class="current-color color"></div><p>Current color</p>
+          </li>
+          <li id="prev_color">
+            <div class="prev-color color"></div><p>Prev color</p>
+          </li>
+          <div class="border"></div>
+          <li id="red_color">
+            <div class="red-color color"></div><p>red</p>
+          </li>
+          <li id="blue_color">
+            <div class="blue-color color"></div><p>blue</p>
+          </li>
+        </ul>
+      </div>
+
+
+      <canvas id="canvas" width="512" height="512">
+
+      </canvas>
+
+    </main>
+
+
+    <script type="text/javascript" src="dist/bundle.js"></script>
+  </body>
+</html>
