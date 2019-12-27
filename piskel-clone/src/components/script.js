@@ -9,6 +9,7 @@ window.onload = () => {
   const KEYCODE_P = 80;
   const KEYCODE_C = 67;
   const KEYCODE_E = 69;
+  const KEYCODE_S = 83;
   const red = '0xff0000FF';
   const blue = '0x0000FFFF';
   const grey = '0x808080FF';
@@ -37,7 +38,8 @@ window.onload = () => {
   const chooseColor = document.getElementById('choose_color');
   const paintBucket = document.getElementById('paint_bucket');
   const eraser = document.getElementById('eraser');
-  const tools = [pencil, chooseColor, paintBucket, eraser];
+  const straightLine = document.getElementById('straight_line');
+  const tools = [pencil, chooseColor, paintBucket, eraser, straightLine];
   let currentTool = pencil;
   currentTool.classList.add('selected-tool');
   tools.forEach((el) => {
@@ -101,6 +103,8 @@ window.onload = () => {
   }
   let isDrawing = false;
   let isErasing = false;
+  let isStraightLine = false;
+  let isMouseDown = false;
   canvas.addEventListener('mousemove', (e) => {
       [xCoordinate, yCoordinate] = [e.offsetX, e.offsetY];
       switch (currentTool) {
@@ -111,11 +115,15 @@ window.onload = () => {
         case 'eraser':
           erase(xCoordinate, yCoordinate);
           break;
+        case 'straight_line':
+          drawStraightLine(xCoordinate, yCoordinate);
+          break;
         default:
           return;
       }
   });
   canvas.addEventListener('mousedown', (e) => {
+    isMouseDown = true;
     [xCoordinate, yCoordinate] = [e.offsetX, e.offsetY];
     switch (currentTool) {
       case 'pencil':
@@ -138,9 +146,15 @@ window.onload = () => {
     context.fillRect(Math.floor(coordinateX / scale) * scale, Math.floor(coordinateY / scale) * scale, scale, scale);
   }
 
+  const drawStraightLine = (coordinateX, coordinateY) => {
+    const prevCanvas = context.getImageData(0, 0, canvas.width, canvas.height);
+  }
+
+
   canvas.addEventListener('mouseup', () => {
     isDrawing = false;
     isErasing = false;
+    isMouseDown = false;
   });
   canvas.addEventListener('mouseout', () => {
     isDrawing = false;
@@ -177,6 +191,11 @@ window.onload = () => {
         currentTool = 'eraser';
         addOrRemoveClassName('remove', 'selected-tool', '.selected-tool');
         addOrRemoveClassName('add', 'selected-tool', '#eraser');
+        break;
+      case KEYCODE_S:
+        currentTool = 'straight_line';
+        addOrRemoveClassName('remove', 'selected-tool', '.selected-tool');
+        addOrRemoveClassName('add', 'selected-tool', '#straight_line');
         break;
       default:
         break;

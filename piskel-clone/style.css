@@ -58,10 +58,6 @@ main {
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
-.tools ul:first-child li:last-child {
-  opacity: 0.541327;
-}
-
 .selected-tool {
   color: blue;
 }
