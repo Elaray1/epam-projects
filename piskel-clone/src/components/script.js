@@ -4,7 +4,9 @@ window.onload = () => {
   const currentCanvas = localStorage.getItem("currentCanvas");
   const canvas = document.getElementById('canvas');
   const context = canvas.getContext("2d");
-  const scale = 20;
+  const selectCanvasSize = document.querySelector('.canvas-size');
+  const selectPenSize = document.querySelector('.pen-size');
+  let scale = canvas.width / selectCanvasSize.value * selectPenSize.value;
   const KEYCODE_B = 66;
   const KEYCODE_P = 80;
   const KEYCODE_C = 67;
@@ -39,6 +41,11 @@ window.onload = () => {
   const paintBucket = document.getElementById('paint_bucket');
   const eraser = document.getElementById('eraser');
   const straightLine = document.getElementById('straight_line');
+  const changeAllPixels = document.getElementById('change_all_pixels');
+  changeAllPixels.addEventListener('click', () => {
+    context.fillStyle = `#${currentColor.substr(2, currentColor.length - 4)}`;
+    context.fillRect(0, 0, canvas.width, canvas.height);
+  });
   const tools = [pencil, chooseColor, paintBucket, eraser, straightLine];
   let currentTool = pencil;
   currentTool.classList.add('selected-tool');
@@ -228,6 +235,19 @@ window.onload = () => {
         break;
     }
   });
+
+
+
+
+  selectCanvasSize.addEventListener('change', () => {
+    scale = canvas.width / selectCanvasSize.value * selectPenSize.value;
+  });
+
+  selectPenSize.addEventListener('change', () => {
+    scale = canvas.width / selectCanvasSize.value * selectPenSize.value;
+  });
+
+
   context.clearRect(0, 0, canvas.width, canvas.height);
   window.addEventListener('beforeunload', () => {
     localStorage.setItem('currentCanvas', canvas.toDataURL());
