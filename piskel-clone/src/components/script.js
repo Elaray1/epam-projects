@@ -4,7 +4,7 @@ window.onload = () => {
   const currentCanvas = localStorage.getItem("currentCanvas");
   const canvas = document.getElementById('canvas');
   const context = canvas.getContext("2d");
-  const scale = 128;
+  const scale = 20;
   const KEYCODE_B = 66;
   const KEYCODE_P = 80;
   const KEYCODE_C = 67;
@@ -104,7 +104,9 @@ window.onload = () => {
   let isDrawing = false;
   let isErasing = false;
   let isStraightLine = false;
-  let isMouseDown = false;
+  let straightLineX = 0;
+  let straightLineY = 0;
+  let prevCanvasData = context.getImageData(0, 0, canvas.width, canvas.height);
   canvas.addEventListener('mousemove', (e) => {
       [xCoordinate, yCoordinate] = [e.offsetX, e.offsetY];
       switch (currentTool) {
@@ -116,24 +118,27 @@ window.onload = () => {
           erase(xCoordinate, yCoordinate);
           break;
         case 'straight_line':
-          drawStraightLine(xCoordinate, yCoordinate);
+          drawStraightLine(xCoordinate, yCoordinate, straightLineX, straightLineY, prevCanvasData);
           break;
         default:
           return;
       }
   });
   canvas.addEventListener('mousedown', (e) => {
-    isMouseDown = true;
     [xCoordinate, yCoordinate] = [e.offsetX, e.offsetY];
     switch (currentTool) {
       case 'pencil':
       case pencil:
         isDrawing = true;
-        pencilDraw(xCoordinate, yCoordinate, currentColor);
         break;
       case 'eraser':
         isErasing = true;
-        erase(xCoordinate, yCoordinate);
+        break;
+      case 'straight_line':
+        isStraightLine = true;
+        straightLineX = xCoordinate;
+        straightLineY = yCoordinate;
+        prevCanvasData = context.getImageData(0, 0, canvas.width, canvas.height);
         break;
       default:
         return;
@@ -146,19 +151,41 @@ window.onload = () => {
     context.fillRect(Math.floor(coordinateX / scale) * scale, Math.floor(coordinateY / scale) * scale, scale, scale);
   }
 
-  const drawStraightLine = (coordinateX, coordinateY) => {
-    const prevCanvas = context.getImageData(0, 0, canvas.width, canvas.height);
-  }
+  const drawStraightLine = (coordinateX, coordinateY, straightLineX, straightLineY, prevCanvasData) => {
+      if (!isStraightLine) return;
+      context.putImageData(prevCanvasData, 0, 0);
+      coordinateX = Math.floor(coordinateX / scale) * scale;
+      coordinateY = Math.floor(coordinateY / scale) * scale;
+      straightLineX = Math.floor(straightLineX / scale) * scale;
+      straightLineY = Math.floor(straightLineY / scale) * scale;
+      const dx = Math.abs(coordinateX - straightLineX);
+      const dy = Math.abs(coordinateY - straightLineY);
+      const sx = (straightLineX < coordinateX) ? 1 : -1;
+      const sy = (straightLineY < coordinateY) ? 1 : -1;
+      let err = dx - dy;
+      while (true && straightLineX >= 0 && straightLineX < canvas.width
+        && straightLineY >= 0 && straightLineY < canvas.width) {
+        context.fillStyle = `#${currentColor.substr(2, currentColor.length - 4)}`;
+        context.fillRect(straightLineX, straightLineY, scale, scale);
+        if ((straightLineX === coordinateX) && (straightLineY === coordinateY)) break;
+        const e2 = 2 * err;
+        if (e2 > -dy) { err -= dy; straightLineX += sx * scale; }
+        if (e2 < dx) { err += dx; straightLineY += sy * scale; }
+      }
+    }
 
 
   canvas.addEventListener('mouseup', () => {
     isDrawing = false;
     isErasing = false;
-    isMouseDown = false;
+    isStraightLine = false;
+    prevCanvasData = context.getImageData(0, 0, canvas.width, canvas.height);
   });
   canvas.addEventListener('mouseout', () => {
     isDrawing = false;
     isErasing = false;
+    isStraightLine = false;
+    prevCanvasData = context.getImageData(0, 0, canvas.width, canvas.height);
   });
   let xCoordinate = 0, yCoordinate = 0;
   canvas.addEventListener('click', (event) => {
