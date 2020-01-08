@@ -19,4 +19,6 @@
     * `b` to select fill bucket
     * `p` to select pencil
     * `c` to select color picker
+    * `e` to select eraser
+    * `a` to cover the canvas with one color
  * You have possibility to refresh the page and be able to see previous canvas content.
