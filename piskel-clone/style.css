@@ -121,3 +121,8 @@ input[type=color]::-moz-color-swatch {
   cursor: pointer;
   border: 3px solid gold;
 }
+
+
+#change_all_pixels {
+  color: red;
+}

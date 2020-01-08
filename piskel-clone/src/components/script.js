@@ -12,6 +12,7 @@ window.onload = () => {
   const KEYCODE_C = 67;
   const KEYCODE_E = 69;
   const KEYCODE_S = 83;
+  const KEYCODE_A = 65;
   const red = '0xff0000FF';
   const blue = '0x0000FFFF';
   const grey = '0x808080FF';
@@ -64,6 +65,7 @@ window.onload = () => {
   theInputColor.addEventListener("input", function() {
     document.querySelector('.prev-color').style.background = document.querySelector('.current-color').style.background;
     document.querySelector('.current-color').style.background = theInputColor.value;
+    changeAllPixels.style.color = theInputColor.value;
     prevColor = currentColor;
     currentColor = '0x' + theInputColor.value.substr(1) + 'FF';
   }, false);
@@ -72,12 +74,14 @@ window.onload = () => {
     currentColor = red;
     document.querySelector('.prev-color').style.background = document.querySelector('.current-color').style.background;
     document.querySelector('.current-color').style.background = '#' + currentColor.substr(2, String(currentColor).length-4);
+    changeAllPixels.style.color = '#' + currentColor.substr(2, String(currentColor).length-4);
   });
   blueColor.addEventListener('click', () => {
     prevColor = currentColor;
     currentColor = blue;
     document.querySelector('.prev-color').style.background = document.querySelector('.current-color').style.background;
     document.querySelector('.current-color').style.background = '#' + currentColor.substr(2, String(currentColor).length-4);
+    changeAllPixels.style.color = '#' + currentColor.substr(2, String(currentColor).length-4);
   });
   previousColor.addEventListener('click', () => {
     let t = currentColor;
@@ -94,6 +98,7 @@ window.onload = () => {
     currentColor = '0x' + convertRgbToHex(pixels[0], pixels[1], pixels[2]).substr(1) + 'FF';
     document.querySelector('.prev-color').style.background = document.querySelector('.current-color').style.background;
     document.querySelector('.current-color').style.background = convertRgbToHex(pixels[0], pixels[1], pixels[2]);
+    changeAllPixels.style.color = document.querySelector('.current-color').style.background;
   }
   function pencilDraw(coordinateX, coordinateY, currentColor) {
     if (!isDrawing) return;
@@ -230,6 +235,10 @@ window.onload = () => {
         currentTool = 'straight_line';
         addOrRemoveClassName('remove', 'selected-tool', '.selected-tool');
         addOrRemoveClassName('add', 'selected-tool', '#straight_line');
+        break;
+      case KEYCODE_A:
+        context.fillStyle = `#${currentColor.substr(2, currentColor.length - 4)}`;
+        context.fillRect(0, 0, canvas.width, canvas.height);
         break;
       default:
         break;

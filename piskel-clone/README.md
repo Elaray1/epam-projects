@@ -7,6 +7,9 @@
  * You can select the tool by left click on the tool icon:
   * **Fill bucket tool**: filling by current color inside closed area.
   * **Pencil tool**: if you presses a left mouse button, the pencil will draw pixel under the current mouse position.
+  * **Eraser**: to erase pixels from the canvas.
+  * **Straight line**: to create straight lines.
+  * **Select pixels**: to cover the canvas with one color.
   * **Color picker**: You can choose the color by
     * clicking on current color and using color input functionality;
     * clicking on one of predefined colors (red or blue);
